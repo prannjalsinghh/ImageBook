@@ -51,7 +51,7 @@ const UserProvider = (props) => {
 
     const getLoggedInUser = async () => {
         if (localStorage.getItem('loggedInUser')) {
-            const res = await axios.get(`https://imagebook-digilabs.herokuapp.com/getUsers/${localStorage.getItem('loggedInUser')}`)
+            const res = await axios.get(`https://imagebook.onrender.com/getUsers/${localStorage.getItem('loggedInUser')}`)
             const data = res?.data;
             setLogin(data[0])
         }

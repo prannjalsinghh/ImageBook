@@ -40,7 +40,7 @@ const Profile = () => {
 
   const getUser = async () => {
     const response = await axios.get(
-      `https://imagebook-digilabs.herokuapp.com/getUsers/${params.id}`
+      `https://imagebook.onrender.com/getUsers/${params.id}`
     );
     const data = response?.data;
     if (data.length === 0) {

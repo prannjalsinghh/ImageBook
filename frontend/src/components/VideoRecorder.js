@@ -139,8 +139,8 @@ const VideoRecorder = () => {
             selectedType:location.state.request
           }
         }
-        axios.post(`https://imagebook-digilabs.herokuapp.com/updateGivenRespects`, obj)
-        axios.post(`https://imagebook-digilabs.herokuapp.com/updateRecievedRespects`, obj1)
+        axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
+        axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
         console.log("done");
 
       }

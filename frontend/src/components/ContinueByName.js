@@ -23,10 +23,10 @@ const ContinueByName = ({ number }) => {
       number: number,
       name: userName,
     };
-    axios.post('https://imagebook-digilabs.herokuapp.com/postUsers', user);
+    axios.post('https://imagebook.onrender.com/postUsers', user);
 
 
-    fetch(`https://imagebook-digilabs.herokuapp.com/getUsers/${user.number}`)
+    fetch(`https://imagebook.onrender.com/getUsers/${user.number}`)
       .then((res) => res.json())
       .then((data) => {
         // console.log('data', data);

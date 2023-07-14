@@ -31,7 +31,7 @@ const EachRespect = (props) => {
 
     const getSender = async () => {
         const res = await axios.get(
-            `https://imagebook-digilabs.herokuapp.com/getUsers/${props.sender}`
+            `https://imagebook.onrender.com/getUsers/${props.sender}`
         );
         const data = res?.data;
         setSender(data[0]);
@@ -39,7 +39,7 @@ const EachRespect = (props) => {
 
     const getReciever = async () => {
         const res = await axios.get(
-            `https://imagebook-digilabs.herokuapp.com/getUsers/${props.reciever}`
+            `https://imagebook.onrender.com/getUsers/${props.reciever}`
         );
         const data = res?.data;
         setReciever(data[0]);
