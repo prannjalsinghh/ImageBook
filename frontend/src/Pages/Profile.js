@@ -18,6 +18,7 @@ import respect from '../images/Home/respect.svg';
 import goodLuck from '../images/Home/goodLuck.svg';
 import promise from '../images/Home/promise.svg';
 import feedback from '../images/Home/feedback.svg';
+import Loading from "../components/Loader/Loading";
 
 const Profile = () => {
   const userCtx = useContext(UserContext);
@@ -28,6 +29,7 @@ const Profile = () => {
   const [isMyProfile, setIsMyProfile] = useState(false);
   const [notExist, setNotExist] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getUser();
@@ -38,6 +40,7 @@ const Profile = () => {
   }, [params.id, userCtx.loggedInUser.number]);
 
   const getUser = async () => {
+    setLoading(true);
     const response = await axios.get(
       `https://imagebook.onrender.com/getUsers/${params.id}`
     );
@@ -48,6 +51,7 @@ const Profile = () => {
     if (data[0]?.registered == true) {
       setIsRegistered(true);
     }
+    setLoading(false);
     setObj(data[0]);
   };
 
@@ -65,7 +69,8 @@ const Profile = () => {
 
   return (
     <>
-      <Navigator heading="Profile" backHandler={backHandler} icon="share" />
+      {loading && <Loading/>}
+      {!loading &&(<> <Navigator heading="Profile" backHandler={backHandler} icon="share" />
       {!notExist && 
       (
         <>
@@ -183,7 +188,7 @@ const Profile = () => {
           <img src={person} alt="" />
         </div>
       </div>
-      {/* Footer Ends */}
+      {/* Footer Ends */}</>)}
     </>
   );
 };

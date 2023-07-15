@@ -15,11 +15,12 @@ import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import PhoneInput from 'react-phone-number-input'
 import GiveRespectEachContact from "./GiveRespectEachContact";
 import axios from "axios";
+import Loading from "./Loader/Loading";
 
 const GiveRespectSearchPage = () => {
   const location = useLocation();
   const userCtx = useContext(UserContext);
-
+  const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [searchResult,setSearchResult] =useState({});
@@ -30,6 +31,9 @@ const GiveRespectSearchPage = () => {
   },[input])
 
   const onInputChange = async ()=>{
+    if( input.length === 0) return;
+
+    setLoading(true);
     const res = await axios.get(`https://imagebook.onrender.com/searchUserPartialNumber/${input}`)
     const data = res.data;
     if(data && data.number!==userCtx.loggedInUser.number){
@@ -43,6 +47,7 @@ const GiveRespectSearchPage = () => {
     if(!data){
       setSearchResult(null)
     }
+    setLoading(false);
   }
   
 
@@ -105,7 +110,8 @@ const GiveRespectSearchPage = () => {
             </p>
           </div>
         )}
-        {
+        {loading && <Loading/>}
+        {!loading && <>{
           input && <div className=" w-11/12 mx-auto mt-[27px]">
           <p
             style={{ color: "#5E849C" }}
@@ -134,7 +140,7 @@ const GiveRespectSearchPage = () => {
           )}
           {input && input===userCtx.loggedInUser.number && <div className=" w-11/12 mx-auto mt-[27px]"><p
             className="text-sm text-red-500"
-          >Seems like you entered your mobile number.</p></div>}
+          >Seems like you entered your mobile number.</p></div>}</>}
       </div>
     </div>
   );

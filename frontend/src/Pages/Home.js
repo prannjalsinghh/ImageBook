@@ -30,9 +30,11 @@ const Home = () => {
     const userCtx = useContext(UserContext);
     const [sidebar, setSidebar] = useState(false);
     const navigate = useNavigate();
+    
     const goToSearch = () => {
         navigate('/search')
     }
+
     const doSignOut = () => {
         signOut(auth).then(() => {
             localStorage.removeItem('loggedInUser');

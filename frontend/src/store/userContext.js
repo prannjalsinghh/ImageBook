@@ -1,13 +1,14 @@
 import React from "react";
 const UserContext = React.createContext({
     isLoggedIn: false,
+    isLoading:true,
     loggedInUser: {
         registered:false,
         accountCreationDate:Date.now(),
         number: "",
         name:"",
         image:"",
-        dateOfBirth:"",
+        dateOfBirth:Date.now(),
         verified:false,
         trustScore:0,
         location: {},

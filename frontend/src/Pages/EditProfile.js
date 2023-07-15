@@ -17,6 +17,7 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import ProfileUpdated from '../components/ProfileUpdated';
 import axios from 'axios';
+import Loading from '../components/Loader/Loading';
 
 const EditProfile = () => {
     const [number, setNumber] = useState('');   
@@ -29,6 +30,12 @@ const EditProfile = () => {
     const [detectLocation, setDetectLocation] = useState(false);
     const [uploadImage, setUploadImage] = useState(false);
     const [date,setDate] = useState(userCtx.loggedInUser.dateOfBirth);
+    const [loading,setLoading] = useState(true);
+
+    useEffect(()=>{
+        setLoading(userCtx.isLoading);
+    },[userCtx.isLoading])
+
     const navigate = useNavigate();
     const goHome = () => {
         navigate('/home');
@@ -38,8 +45,10 @@ const EditProfile = () => {
         setGender(e.target.value)
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setUpdateProfile(true);
 
         const updatedUser = {
             number: userCtx.loggedInUser.number,
@@ -48,11 +57,15 @@ const EditProfile = () => {
             dateOfBirth: date,
             gender:gender
         }
-        axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser);
+        await axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser);
+        
+        setUpdateProfile(false);
+
     }
     return (
         <div>
-            <div className='w-11/12 mx-auto my-6 relative'>
+            {loading && <Loading/>}
+            {!loading && <div className='w-11/12 mx-auto my-6 relative'>
                 <div className='flex items-center justify-between mb-10'>
                     <div className='flex items-center space-x-2'>
                         <img onClick={goHome} className='hover:cursor-pointer' src={leftIcon} alt="" />
@@ -67,21 +80,14 @@ const EditProfile = () => {
                     <div className='flex items-center justify-center mb-4 gap-x-4'>
                         <div className='w-full mx-auto'>
                             <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'> Name</p>
-                            <input className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' defaultValue={name} type="text" name="firstName" id="" />
+                            <input className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' onChange={(e)=>setName(e.target.value)} defaultValue={name} type="text" name="firstName" id="" />
                         </div>
                     </div>
                     <div className='mb-4'>
                         <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'>Number</p>
-                        <input type='text' value={userCtx.loggedInUser.number} className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' />
+                        <input type='text' readOnly value={userCtx.loggedInUser.number} className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' />
                     </div>
-                    <div className='mb-4'>
-                        <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'>Kyc</p>
-                        <div className='relative'>
-                            <input className='border-[2px] border-[#EBF1F4] rounded-[10px] w-full pl-10 h-12 space-x-1 text-lg placeholder-[#1B2328] text-[#1B2328] focus:outline-none' placeholder="Kyc Verification" name="verification" type="text" />
-                            <img className='absolute top-[14px] left-3' src={verification} alt="" />
-                            <img className='absolute top-[14px] right-3' src={question} alt="" />
-                        </div>
-                    </div>
+                    
                     <div className='mb-4'>
                         <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'>Gender</p>
                         <div className='flex items-center justify-center gap-x-4'>
@@ -107,7 +113,7 @@ const EditProfile = () => {
                         </div>
                     </div>
                     <div className='mb-4'>
-                        <button onClick={() => setUpdateProfile(true)} type='submit' className='w-full h-12 rounded-[10px] bg-[#1363DF] text-white text-lg font-semibold'>Save Change</button>
+                        <button type='submit' className='w-full h-12 rounded-[10px] bg-[#1363DF] text-white text-lg font-semibold'>Save Change</button>
                     </div>
                 </form>
 
@@ -117,7 +123,7 @@ const EditProfile = () => {
                 {
                     updateProfile && <ProfileUpdated updateProfile={updateProfile} setUpdateProfile={setUpdateProfile}></ProfileUpdated>
                 }
-            </div>
+            </div>}
         </div>
     );
 };

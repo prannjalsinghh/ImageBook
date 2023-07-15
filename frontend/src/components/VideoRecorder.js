@@ -35,7 +35,7 @@ const VideoRecorder = () => {
   const videoRef = React.useRef(null);
   const [videoTime, setVideoTime] = useState(0);
   const [progress, setProgress] = useState(0);
-
+  const [stateComponent, setStateComponent] = useState(true);
 
   useEffect(() => {
     if (recording === "def") {
@@ -106,11 +106,13 @@ const VideoRecorder = () => {
     handleDownload();
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
-  const uploadFile = file => {
+  const uploadFile = (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append("upload_preset", "yfhzkfb5");
-    axios.post("https://api.cloudinary.com/v1_1/djdqb8feb/video/upload", formData).then((response) => {
+    formData.append("upload_preset", "kghszgfx");
+    axios.post("https://api.cloudinary.com/v1_1/dewunyk7d/video/upload", formData).then(async (response) => {
+      console.log('url', response.data.secure_url);
+      console.log(response);
       if (response.status === 200) {
 
         let link = response.data.secure_url;
@@ -122,7 +124,7 @@ const VideoRecorder = () => {
             url: link,
             postedBy: userCtx.loggedInUser.number,
             cameraUsed: cameraMode,
-            selectedType:location.state.request
+            selectedType: location.state.request
           }
         }
         let obj1 = {
@@ -134,15 +136,17 @@ const VideoRecorder = () => {
             url: link,
             postedBy: userCtx.loggedInUser.number,
             cameraUsed: cameraMode,
-            selectedType:location.state.request
+            selectedType: location.state.request
           }
         }
-        axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
-        axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
-
-      }
-    })
+      await axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
+      await axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
+      await axios.post(`https://imagebook.onrender.com/pushNotification/${location.state.id}`, {sender:location.state.id,type:location.state.request})
+      setStateComponent(false);
+    }
+  })
   }
+  
 
   const handleDownload = () => {
     if (recordedChunks?.length) {
@@ -182,7 +186,7 @@ const VideoRecorder = () => {
 
   const submitHandler = () => {
     setSubmitted(true);
-    uploadFile(newBlob)
+    uploadFile(newBlob);
   };
 
   //   const postData = (url)=>{
@@ -320,7 +324,7 @@ const VideoRecorder = () => {
           </div>
         </div>
       )}
-      {submitted && <UploadingVideoComponent></UploadingVideoComponent>}
+      {submitted && <UploadingVideoComponent stateComponent={stateComponent}></UploadingVideoComponent>}
     </>
   );
 };

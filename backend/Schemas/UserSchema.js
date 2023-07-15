@@ -30,6 +30,9 @@ const user={
         longitude:Number,
         latitude:Number
     },
+    notifications:[{
+        text:String,
+    }],
     dateOfBirth:{
         type:Date,
         default:Date.now()

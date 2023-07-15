@@ -1,16 +1,19 @@
 import axios from "axios";
 import { useEffect, useReducer } from "react";
 import UserContext from "./userContext";
-
+import { set } from "mongoose";
+import { useState } from "react";
+import Loading from "../components/Loader/Loading";
 const defaultUserCtx = {
     isLoggedIn: false,
+    isLoading:true,
     loggedInUser: {
         registered: false,
         accountCreationDate: Date.now,
         name: '',
         number: '',
         image: 'https://i.stack.imgur.com/l60Hf.png',
-        dateOfBirth: '',
+        dateOfBirth: Date.now(),
         verified: false,
         trustScore: 0,
         location: { longitude: 0, latitude: 0 },
@@ -25,6 +28,7 @@ const userReducer = (state, action) => {
     if (action.type === 'SETLOGIN') {
         return {
             isLoggedIn: true,
+            isLoading:false,
             loggedInUser: {
                 registered: action.user.registered,
                 accountCreationDate: action.user.accountCreationDate,
@@ -57,12 +61,12 @@ const UserProvider = (props) => {
         getLoggedInUser();
     }, [])
     const [UserState, dispatchUserState] = useReducer(userReducer, defaultUserCtx);
-
     const getLoggedInUser = async () => {
         if (localStorage.getItem('loggedInUser')) {
             const res = await axios.get(`https://imagebook.onrender.com/getUsers/${localStorage.getItem('loggedInUser')}`)
             const data = res?.data;
             setLogin(data[0])
+            
         }
     }
     const setLogin = (user) => {
