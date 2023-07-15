@@ -28,7 +28,7 @@ const EditProfile = () => {
     const [updateProfile, setUpdateProfile] = useState(false);
     const [detectLocation, setDetectLocation] = useState(false);
     const [uploadImage, setUploadImage] = useState(false);
-    const [date,setDate] = useState(userCtx.loggedInUser.dob);
+    const [date,setDate] = useState(userCtx.loggedInUser.dateOfBirth);
     const navigate = useNavigate();
     const goHome = () => {
         navigate('/home');
@@ -42,13 +42,13 @@ const EditProfile = () => {
         e.preventDefault();
 
         const updatedUser = {
+            number: userCtx.loggedInUser.number,
             name: name,
             image: image,
             dateOfBirth: date,
             gender:gender
         }
-
-        axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser);;
+        axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser);
     }
     return (
         <div>
@@ -67,7 +67,7 @@ const EditProfile = () => {
                     <div className='flex items-center justify-center mb-4 gap-x-4'>
                         <div className='w-full mx-auto'>
                             <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'> Name</p>
-                            <input className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' value={name} type="text" name="firstName" id="" />
+                            <input className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] pl-3' defaultValue={name} type="text" name="firstName" id="" />
                         </div>
                     </div>
                     <div className='mb-4'>
@@ -84,7 +84,7 @@ const EditProfile = () => {
                     </div>
                     <div className='mb-4'>
                         <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'>Gender</p>
-                        <div className='flex items-center justify-center gap-x-4' onChange={(e)=>setGender(e.target.value)}>
+                        <div className='flex items-center justify-center gap-x-4'>
                             <div className='w-full mx-auto'>
                                 <div className='w-full h-11 focus:outline-none border-2 border-[#EBF1F4] rounded-[10px] text-lg text-[#1B2328] placeholder-[#1B2328] flex items-center space-x-2 pl-3'>
                                     <input className='bg-[#231F20] w-5 h-5' type="radio" name="gender" value="male" onChange={toggleGender} checked={gender==='male'?"checked":""}/>
@@ -103,7 +103,7 @@ const EditProfile = () => {
                     <div className='mb-6'>
                         <p className='font-semibold text-lg text-[#00386D] ml-2 mb-1'>Date of Birth</p>
                         <div className='relative'>
-                            <input className='border-[2px] border-[#EBF1F4] rounded-[10px] w-full pl-3 h-12 space-x-1 text-lg placeholder-[#1B2328] text-[#1B2328] focus:outline-none pr-3' value={date} name="dateInput" type="date" />
+                            <input className='border-[2px] border-[#EBF1F4] rounded-[10px] w-full pl-3 h-12 space-x-1 text-lg placeholder-[#1B2328] text-[#1B2328] focus:outline-none pr-3' onChange={(e)=>setDate(e.target.value)} defaultValue={date} name="dateInput" type="date" />
                         </div>
                     </div>
                     <div className='mb-4'>

@@ -10,7 +10,10 @@ const user={
         default:Date.now()
     },
     name:String,
-    number:String,
+    number:{
+        type:String,
+        unique:true
+    },
     image:{
         type:String,
         default:'https://i.stack.imgur.com/l60Hf.png'
@@ -27,7 +30,10 @@ const user={
         longitude:Number,
         latitude:Number
     },
-    dateOfBirth:String,
+    dateOfBirth:{
+        type:Date,
+        default:Date.now()
+    },
     gender:String,
     givenRespects:[{
         respectLink:String,
