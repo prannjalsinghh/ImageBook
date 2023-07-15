@@ -31,7 +31,8 @@ const user={
         latitude:Number
     },
     notifications:[{
-        text:String,
+        sender:String,
+        request:String,
     }],
     dateOfBirth:{
         type:Date,

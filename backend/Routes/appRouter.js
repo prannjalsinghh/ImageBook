@@ -85,7 +85,7 @@ router.route("/updateRecievedRespects").post((req, res) => {
     else {
       User.findOneAndUpdate(
         { number: req.body.number },
-        { $push: { recievedRespects: req.body.respects } },
+        { $push: { recievedRespects: req.body.respects }},
       ).then(() => console.log("done")
       )
       return;
@@ -125,9 +125,6 @@ router.route('/searchUserPartialNumber/:id').get(async (req,res)=>{
   User.findOne({ number: { $regex: field.substring(1) , $options: "i" } }).then((foundData)=>res.send(foundData));
 })
 
-router.route('/pushNotification/:id').post(async (req,res) =>{
-  User.findOneAndUpdate({number:req.params.id},{$push:{notifications:`${req.body.sender} sent you a ${req.body.type}`}}).then(()=>res.send('done'))
-})
 
 
 module.exports = router;
