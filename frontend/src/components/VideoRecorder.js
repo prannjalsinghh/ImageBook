@@ -110,9 +110,7 @@ const VideoRecorder = () => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append("upload_preset", "kghszgfx");
-    axios.post("https://api.cloudinary.com/v1_1/dewunyk7d/video/upload", formData).then(async (response) => {
-      console.log('url', response.data.secure_url);
-      console.log(response);
+    axios.post("https://api.cloudinary.com/v1_1/dewunyk7d/video/upload", formData).then( (response) => {
       if (response.status === 200) {
 
         let link = response.data.secure_url;
@@ -139,9 +137,9 @@ const VideoRecorder = () => {
             selectedType: location.state.request
           }
         }
-      await axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
-      await axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
-      await axios.post(`https://imagebook.onrender.com/pushNotification/${location.state.id}`, {sender:location.state.id,type:location.state.request})
+       axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
+       axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
+      //  axios.post(`https://imagebook.onrender.com/pushNotification/${location.state.id}`, {sender:location.state.id,type:location.state.request})
       setStateComponent(false);
     }
   })
