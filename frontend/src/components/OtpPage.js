@@ -46,8 +46,6 @@ const OtpPage = ({ setValid, number }) => {
         setOtp(otp.slice(0, -1));
     }
 
-    // console.log(otp)
-
     const handleVerify = async (e) => {
         e.preventDefault();
         setHidden(true);

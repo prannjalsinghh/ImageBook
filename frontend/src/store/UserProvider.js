@@ -5,15 +5,24 @@ import UserContext from "./userContext";
 const defaultUserCtx = {
     isLoggedIn: false,
     loggedInUser: {
-
+        registered: false,
+        accountCreationDate: Date.now,
+        name: '',
+        number: '',
+        image: 'https://i.stack.imgur.com/l60Hf.png',
+        dateOfBirth: '',
+        verified: false,
+        trustScore: 0,
+        location: { longitude: 0, latitude: 0 },
+        gender: '',
+        givenRespects: [],
+        recievedRespects: [],
     }
 }
 
 const userReducer = (state, action) => {
 
     if (action.type === 'SETLOGIN') {
-
-        console.log('hi')
         return {
             isLoggedIn: true,
             loggedInUser: {

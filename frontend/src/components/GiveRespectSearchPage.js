@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import leftIcon from "../images/Notifications/Left Icon.png";
 import loveIcon from "../images/Home/Right Icon.png";
@@ -6,6 +6,7 @@ import notification from "../images/Home/Right Icon (1).png";
 import person from "../images/Notifications/Vector.png";
 import search from "../images/Notifications/search.png";
 import ContactEach from "./ContactEach";
+import UserContext from "../store/userContext";
 import { useState } from "react";
 import ohNoImage from "../Assets/ohNoImage.png";
 import add from '../Assets/add.png'
@@ -17,20 +18,8 @@ import axios from "axios";
 
 const GiveRespectSearchPage = () => {
   const location = useLocation();
-  console.log(location.state.id);
-  const arr = [
-    {
-      name: "Aarush Mishra",
-      number: "+9189237348934",
-      img: "https://media.istockphoto.com/photos/portrait-of-handsome-latino-african-man-picture-id1007763808?k=20&m=1007763808&s=612x612&w=0&h=q4qlV-99EK1VHePL1-Xon4gpdpK7kz3631XK4Hgr1ls=",
-    },
-    {
-      name: "Bhageerathi Patel",
-      number: "+9189237348934",
-      img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-  ];
-  
+  const userCtx = useContext(UserContext);
+
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [searchResult,setSearchResult] =useState({});
@@ -41,9 +30,9 @@ const GiveRespectSearchPage = () => {
   },[input])
 
   const onInputChange = async ()=>{
-    const res = await axios.get(`http://localhost:5000/searchUserPartialNumber/${input}`)
+    const res = await axios.get(`https://imagebook.onrender.com/searchUserPartialNumber/${input}`)
     const data = res.data;
-    if(data){
+    if(data && data.number!==userCtx.loggedInUser.number){
       setSearchResult({
         name: data.name,
         number: data.number,
@@ -66,7 +55,9 @@ const GiveRespectSearchPage = () => {
   const suggestNameHandler = ()=>{
     navigate('/suggestName',{state:{id:input,request:location.state.id}})
   }
-  
+  const setModalOpen = (number,name,img)=>{
+    navigate('/video',{state:{id:number,name:name,img:img,request:location.state.id}})
+  }
   return (
     <div>
       <div className="w-11/12 mx-auto my-6">
@@ -91,7 +82,7 @@ const GiveRespectSearchPage = () => {
         </div>
       </div>
       <div className="">
-        <div className="w-11/12 mx-auto mt-12 flex items-center space-x-3">
+        <div className="w-11/12 w-fit mx-auto mt-12 flex items-center space-x-3">
         <PhoneInput
             className="border-[2px] border-[#EBF1F4] rounded-[10px] p-[10px] h-12 text-lg"
             defaultCountry="IN"
@@ -125,26 +116,12 @@ const GiveRespectSearchPage = () => {
           
         </div>
         }
-        {input?.length !== 0 &&
-          arr.filter((obj) => obj.number.includes(input)).length !== 0 && (
-            <>
-              
-              
-              <div className="flex flex-col gap-3 mt-[20px]">
-                {arr
-                  .filter((obj) => obj.number.includes(input))
-                  .map((each) => (
-                    <GiveRespectEachContact item={each} />
-                  ))}
-              </div>
-            </>
-          )}
-          {(input &&  arr.filter((obj) => obj.number.includes(input)).length === 0 && searchResult && searchResult.registered==true ) && <div className="mt-[20px]">
+        
+          {(input && searchResult && searchResult.registered==true ) && <div className="mt-[20px]">
             
-              <GiveRespectEachContact item={searchResult}/>
+              <GiveRespectEachContact item={searchResult} setModalOpen={setModalOpen} />
             </div>}
-        {input && !searchResult && isPossiblePhoneNumber(input) &&
-          arr.filter((obj) => obj.number.includes(input)).length === 0 && (
+        {input && input!==userCtx.loggedInUser.number && (!searchResult || searchResult?.registered==false) && isPossiblePhoneNumber(input) && (
             <>
               <div className="w-11/12 flex flex-row justify-between items-center mt-[20px] mx-auto bg-[#F5F8FA] rounded-xl h-[70px] px-[15px]" onClick={suggestNameHandler}>
                   <div className="flex flex-col gap-0.5 ">
@@ -155,6 +132,9 @@ const GiveRespectSearchPage = () => {
               </div>
             </>
           )}
+          {input && input===userCtx.loggedInUser.number && <div className=" w-11/12 mx-auto mt-[27px]"><p
+            className="text-sm text-red-500"
+          >Seems like you entered your mobile number.</p></div>}
       </div>
     </div>
   );

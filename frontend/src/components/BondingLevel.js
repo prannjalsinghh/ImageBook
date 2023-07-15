@@ -12,7 +12,6 @@ const BondingLevel = ({ setModal, number, yes, no, setBondingLevel, setYes, bond
         setNo(false);
         setCommitmentLevel(true);
         setResponsibilityLevel(false);
-        console.log(commitmentLevel);
     }
     return (
         <div className='flex flex-col items-center justify-center'>

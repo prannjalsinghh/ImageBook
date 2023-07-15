@@ -23,7 +23,7 @@ const SuggestName = () => {
 
   const createUserHandler = async ()=>{
     const obj = {name:name,number:location.state.id}
-    const res = await axios.post('http://localhost:5000/createNonExistingUser',obj);
+    const res = await axios.post('https://imagebook.onrender.com/createNonExistingUser',obj);
     
     navigate('/newCreatedUserProfile',{state:{id:location.state.id,request:location.state.request}});
   }

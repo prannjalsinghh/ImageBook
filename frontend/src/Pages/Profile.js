@@ -33,7 +33,6 @@ const Profile = () => {
     getUser();
 
     if (params.id === userCtx.loggedInUser.number) {
-      // console.log('id', params.id, userCtx.loggedInUser.number);
       setIsMyProfile(true);
     }
   }, [params.id, userCtx.loggedInUser.number]);
@@ -152,97 +151,10 @@ const Profile = () => {
             </div>
           </div>
 
-
-
-          {/* <div
-            style={{ backgroundColor: "#EBF1F4" }}
-            className=" flex text-center items-center w-11/12 mt-[24px] mx-auto h-[50px] rounded-md"
-          >
-            <div
-              style={{ backgroundColor: type === "given" ? "white" : "" }}
-              className="flex gap-2 justify-center items-center w-1/2 ml-[2px] mr-[2px] h-[46px] rounded-md"
-              onClick={(e) => setType("given")}
-            >
-              <p style={{ color: "#416C87" }}>Given</p>
-              <p
-                style={{ borderColor: "#416C87" }}
-                className="border-2 text-xs rounded-md px-1"
-              >
-                {obj?.givenRespects?.length}
-              </p>
-            </div>
-            <div
-              style={{ backgroundColor: type === "recieved" ? "white" : "" }}
-              className=" flex gap-2 justify-center items-center w-1/2 ml-[2px] mr-[2px] h-[46px] rounded-md"
-              onClick={(e) => setType("recieved")}
-            >
-              <p style={{ color: "#416C87" }}>Recieved</p>
-              <p
-                style={{ borderColor: "#416C87" }}
-                className="border-2 text-xs rounded-md px-1"
-              >
-                {obj?.recievedRespects?.length}
-              </p>
-            </div>
-          </div>
-          <div className="mt-[20px] grid grid-cols-3 gap-x-1 gap-y-1">
-            
-            {type === "given" &&
-              obj?.givenRespects?.map((each) => (
-                <EachRespect
-                  sender={each.postedBy}
-                  cameraUsed={each.cameraUsed}
-                  url={each.url}
-                  reciever={each.postedFor}
-                />
-              ))}
-            {type === "recieved" &&
-              obj?.recievedRespects?.map((each) => (
-                <EachRespect
-                  sender={each.postedBy}
-                  cameraUsed={each.cameraUsed}
-                  url={each.url}
-                  reciever={each.postedFor}
-                />
-              ))}
-          </div>
-          <div className="mt-[20px] flex items-center justify-center">
-          {type === "given" && obj?.givenRespects?.length === 0 && (
-              <div className="flex flex-col items-center gap-3 mt-[40px]">
-                <img src={noDataFound} />
-                <p style={{ color: "#5E849C" }}>No respects given!</p>
-              </div>
-            )}
-            {type === "recieved" && obj?.recievedRespects?.length === 0 && (
-              <div className="flex flex-col items-center gap-3 mt-[40px]">
-                <img src={noDataFound} />
-                <p style={{ color: "#5E849C" }}>No respects recieved!</p>
-              </div>
-            )}
-          </div>
-          
-        </>
-      )}
-      {notExist && (
-        <h1
-          style={{
-            height: "90vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "2rem",
-            fontWeight: "800",
-          }}
-        >
-          User Does Not Exist
-        </h1>
-      )}
-      {/* Footer starts */}
       </>)}
       <div className="w-full bg-[#F7F7F7] fixed bottom-0 z-50">
         <div className="flex items-center justify-between w-11/12 mx-auto py-4">
-          <img src={home} alt="" />
+          <img src={home} alt="" onClick={()=>navigate('/home')}/>
           <img src={film} alt="" />
 
           <div

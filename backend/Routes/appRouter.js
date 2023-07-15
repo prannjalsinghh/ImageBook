@@ -43,10 +43,22 @@ router.route('/getUsers/:number').get((req, res) => {
 
 router.route("/updateGivenRespects").post((req, res) => {
 
-
   User.findOneAndUpdate(
     { number: req.body.number },
     { $push: { givenRespects: req.body.respects } },
+  ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
+    res.send(foundData)
+  ))
+})
+
+router.route("/updateUser").post((req, res) => {
+
+  User.findOneAndUpdate(
+    { number: req.body.number },
+    {  name: req.body.name,
+      image: req.body.image,
+      dateOfBirth: req.body.dateOfBirth,
+      gender: req.body.gender },
   ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
     res.send(foundData)
   ))

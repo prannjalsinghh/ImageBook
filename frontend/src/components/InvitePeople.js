@@ -16,8 +16,8 @@ const InvitePeople = () => {
                 <Swiper
                     spaceBetween={5}
                     slidesPerView={3}
-                    onSlideChange={() => console.log('slide change')}
-                    onSwiper={(swiper) => console.log(swiper)}
+                    onSlideChange={() => {}}
+                    onSwiper={(swiper) => {}}
                 >
                     <SwiperSlide>
                         <div className='bg-[#EBF1F4] w-[100px] h-[123px] rounded-2xl flex flex-col items-center justify-center space-y-1'>

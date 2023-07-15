@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import leftIcon from "../images/Notifications/Left Icon.png";
 import loveIcon from "../images/Home/Right Icon.png";
@@ -9,47 +9,52 @@ import ContactEach from "./ContactEach";
 import ForNewUser from "./ForNewUser";
 import PhoneInput from "react-phone-number-input";
 import Search from "@mui/icons-material/Search";
+import axios from "axios";
+import { useContext } from "react";
+import UserContext from "../store/userContext";
+
 
 const SearchPage = () => {
-  const arr = [
-    {
-      name: "Aarush Mishra",
-      number: "+9189237348934",
-      img: "https://media.istockphoto.com/photos/portrait-of-handsome-latino-african-man-picture-id1007763808?k=20&m=1007763808&s=612x612&w=0&h=q4qlV-99EK1VHePL1-Xon4gpdpK7kz3631XK4Hgr1ls=",
-    },
-    {
-      name: "Bhageerathi Patel",
-      number: "+9189237348934",
-      img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-  ];
-  const unreg = [
-    {
-      name: "Aarush Mishra",
-      number: "+9189237348934",
-      img: "https://media.istockphoto.com/photos/portrait-of-handsome-latino-african-man-picture-id1007763808?k=20&m=1007763808&s=612x612&w=0&h=q4qlV-99EK1VHePL1-Xon4gpdpK7kz3631XK4Hgr1ls=",
-    },
-    {
-      name: "Bhageerathi Patel",
-      number: "+9189237348934",
-      img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-  ];
+  const userCtx = useContext(UserContext);
+
   const navigate = useNavigate();
-  const [modal, setModal] = useState(false);
   const [input, setInput] = useState("");
-  const [modalNumber, setModalNumber] = useState("");
+  const [searchResult,setSearchResult] =useState({});
+
+  useEffect(()=>{
+    onInputChange();
+  },[input]);
+
+  const onInputChange = async ()=>{
+    const res = await axios.get(`https://imagebook.onrender.com/searchUserPartialNumber/${input}`)
+    const data = res.data;
+    if(data && data.number!==userCtx.loggedInUser.number){
+      setSearchResult({
+        name: data.name,
+        number: data.number,
+        img: data.image,
+        registered:data.registered
+      })
+    }
+    if(!data){
+      setSearchResult(null)
+    }
+    console.log(searchResult)
+  }
+  
+
   const goToNotifications = () => {
     navigate("/notifications");
   };
   const openContactHandler = () => {
-    navigate("/contacts", { state: { id: 'search' } });
+    navigate("/contacts",{state:{id:'send'}});
   };
 
-  const modalOpenHandler = (number) => {
-    setModalNumber(number);
-    setModal(true);
-  };
+  const setModalOpen = ()=>{
+    navigate('/profile',{state:{id:''}})
+  }
+
+
 
   return (
     <div>
@@ -96,8 +101,7 @@ const SearchPage = () => {
           </div>
         )}
         {input?.length !== 0 &&
-          unreg.filter((obj) => obj.number.includes(input)).length !== 0 &&
-          arr.filter((obj) => obj.number.includes(input)).length !== 0 && (
+          searchResult && (
             <>
               <div className="flex flex-row justify-between w-11/12 mx-auto mt-[27px]">
                 <p
@@ -111,53 +115,13 @@ const SearchPage = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-3 mt-[20px]">
-                {arr
-                  .filter((obj) => obj.number.includes(input))
-                  .map((each) => (
-                    <ContactEach item={each} />
-                  ))}
+                <ContactEach item={searchResult} />
               </div>
             </>
           )}
-        {input &&
-          unreg.filter((obj) => obj.number.includes(input)).length === 0 &&
-          arr.filter((obj) => obj.number.includes(input)).length === 0 && (
-            <>
-              <p
-                style={{ color: "#5E849C" }}
-                className="text-sm font-semibold ml-[20px] mt-[20px]"
-              >
-                Phonebook
-              </p>
-              <div onClick={(e) => modalOpenHandler(input)}>
-                <div
-                  style={{ backgroundColor: "#F5F8FA" }}
-                  className="flex gap-2 w-11/12 mx-auto p-[12px]  rounded-xl"
-                >
-                  <img
-                    style={{
-                      borderRadius: "200px",
-                      width: "60px",
-                      height: "60px",
-                      marginRight: "12px",
-                    }}
-                    src="https://i.stack.imgur.com/l60Hf.png"
-                  />
-                  <div>
-                    <p className="text-lg">{input?.toString()}</p>
-                    <p
-                      style={{ backgroundColor: "#E8E8E8" }}
-                      className="text-sm font-bold p-[4px] rounded-md w-fit"
-                    >
-                      Unregistered
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+        
       </div>
-      {modal && <ForNewUser number={modalNumber} setModal={setModal} />}
+
     </div>
   );
 };

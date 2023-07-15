@@ -11,7 +11,6 @@ const CommitmentLevel = ({ setModal, number, yes, no, setBondingLevel, setYes, b
         setCommitmentLevel(false);
         setResponsibilityLevel(true);
     }
-    console.log('here');
     return (
         <div className='flex flex-col items-center justify-center'>
             <img onClick={() => setModal(false)} className='absolute top-8 right-8' src={xIcon} alt="" />

@@ -13,7 +13,7 @@ const NewCreatedUserProfile = ()=>{
         loadUser();
     },[])
     const loadUser = async ()=>{
-        const res = await axios.get(`http://localhost:5000/getUsers/${location.state.id}`)
+        const res = await axios.get(`https://imagebook.onrender.com/getUsers/${location.state.id}`)
         const data = res.data;
 
         setUser({name:data[0].name,

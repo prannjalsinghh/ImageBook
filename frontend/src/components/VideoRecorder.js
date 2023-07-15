@@ -110,9 +110,7 @@ const VideoRecorder = () => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append("upload_preset", "yfhzkfb5");
-    axios.post("https://api.cloudinary.com/v1_1/dtflws28q/video/upload", formData).then((response) => {
-      console.log('url', response.data.secure_url);
-      console.log(response);
+    axios.post("https://api.cloudinary.com/v1_1/djdqb8feb/video/upload", formData).then((response) => {
       if (response.status === 200) {
 
         let link = response.data.secure_url;
@@ -141,7 +139,6 @@ const VideoRecorder = () => {
         }
         axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
         axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
-        console.log("done");
 
       }
     })
@@ -171,7 +168,7 @@ const VideoRecorder = () => {
       videoRef.current.play();
       var vid = document.getElementById("video-replay");
       setVideoTime(vid.duration);
-      console.log(videoTime)
+
     } else if (control === "pause") {
       videoRef.current.pause();
     }
@@ -180,7 +177,7 @@ const VideoRecorder = () => {
     if (isNaN(e.target.duration))   // duration is NotaNumber at Beginning.
       return;
     setProgress((e.target.currentTime / e.target.duration) * 100);
-    console.log(progress)
+
   };
 
   const submitHandler = () => {
@@ -310,7 +307,6 @@ const VideoRecorder = () => {
                     muted={false}
                     loop
                   ></video>
-                  {console.log(progress)}
                   <PostControls
                     playHandler={playHandler}
                     submitHandler={submitHandler}
