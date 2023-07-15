@@ -139,7 +139,7 @@ const VideoRecorder = () => {
         }
        axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
        axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
-       axios.post(`https://imagebook.onrender.com/pushNotification/${location.state.id}`, {sender:userCtx.loggedInUser.number,request:location.state.request})
+       axios.post(`https://imagebook.onrender.com/pushNotification`, {postedFor: location.state.id, sender:userCtx.loggedInUser.number,request:location.state.request})
       setStateComponent(false);
     }
   })
