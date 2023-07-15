@@ -33,7 +33,10 @@ const user={
     notifications:[{
         sender:String,
         request:String,
-        time:Date.now()
+        time:{
+            type:Date,
+            default:Date.now()
+        }
     }],
     dateOfBirth:{
         type:Date,
