@@ -15,6 +15,7 @@ const UserContext = React.createContext({
         gender:"",
         givenRespects:[],
         recievedRespects:[],
+        notifications:[]
     },
     setLogin: (user)=>{}
 })

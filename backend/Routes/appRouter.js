@@ -127,7 +127,7 @@ router.route('/searchUserPartialNumber/:id').get(async (req,res)=>{
 
 
 router.route('/pushNotification').post(async (req,res) =>{
-  User.findOneAndUpdate({number:req.body.postedFor},{$push:{notifications: {sender:req.body.sender, request:req.body.request} }}).then(()=>res.send('done'))
+  User.findOneAndUpdate({number:req.body.postedFor},{$push:{notifications: {sender:req.body.sender, request:req.body.request,time:req.body.time} }}).then(()=>res.send('done'))
 })
 
 

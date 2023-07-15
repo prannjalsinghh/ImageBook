@@ -20,6 +20,7 @@ const defaultUserCtx = {
         gender: '',
         givenRespects: [],
         recievedRespects: [],
+        notifications: []
     }
 }
 
@@ -42,6 +43,7 @@ const userReducer = (state, action) => {
                 gender: action.user.gender,
                 givenRespects: action.user.givenRespects,
                 recievedRespects: action.user.recievedRespects,
+                notifications: action.user.notifications
             }
         }
     }
