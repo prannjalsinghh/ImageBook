@@ -14,14 +14,16 @@ const EachRespect = (props) => {
     const [reciever, setReciever] = useState({});
     const [sender, setSender] = useState({});
     const navigate = useNavigate();
-
+    const each  = props.each;
     const videoData = {
         senderName: sender?.name,
         recieverName: reciever?.name,
-        video: props.url,
-        senderImage: sender?.image
+        video: each?.url,
+        senderImage: sender?.image,
+        cameraUsed: each?.cameraUsed,
+        time: each?.time,
     };
-    const { each } = props;
+
 
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const EachRespect = (props) => {
 
     const getSender = async () => {
         const res = await axios.get(
-            `https://imagebook.onrender.com/getUsers/${props.sender}`
+            `https://imagebook.onrender.com/getUsers/${each?.postedBy}`
         );
         const data = res?.data;
         setSender(data[0]);
@@ -39,22 +41,22 @@ const EachRespect = (props) => {
 
     const getReciever = async () => {
         const res = await axios.get(
-            `https://imagebook.onrender.com/getUsers/${props.reciever}`
+            `https://imagebook.onrender.com/getUsers/${each?.postedFor}`
         );
         const data = res?.data;
         setReciever(data[0]);
     };
 
     const goToDisplayVideo = () => {
-        navigate(`/watch-video`);
+        navigate(`/watch-video`,{state:{videoData:videoData}});
     }
 
     return (
-        <div className='mx-auto relative hover:cursor-pointer'>
+        <div onClick={goToDisplayVideo} className='mx-auto relative hover:cursor-pointer'>
             <video
-                style={{ height: "180px", minHeight: "180px" }}
+                style={{ height: "180px", minHeight: "180px" ,transform: each?.cameraUsed === 'user' ? "scaleX(-1)" : '' }}
                 className=" w-[120px] h-[100px] rounded-lg"
-                src={each.url}
+                src={each?.url}
                 alt=""
             />
             <img className='absolute bottom-3 left-3' src={playIcon} alt="" />

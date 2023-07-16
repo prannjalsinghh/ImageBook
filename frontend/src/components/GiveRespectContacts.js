@@ -40,8 +40,8 @@ const GiveRespectContacts = () => {
     setName(e.target.value);
   };
 
-  const clickHandler = (user)=>{
-    navigate(`/profile/${user.number}`);
+  const clickHandler = (number,name,image)=>{
+    navigate(`/profile/${number}`);
   }
   const backHandler = () => {
 

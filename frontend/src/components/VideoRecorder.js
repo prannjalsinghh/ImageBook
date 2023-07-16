@@ -37,10 +37,12 @@ const VideoRecorder = () => {
   const [progress, setProgress] = useState(0);
   const [stateComponent, setStateComponent] = useState(true);
 
+    
   useEffect(() => {
     if (recording === "def") {
       mutePage();
     }
+    console.log(location.state.id)
   }, [cameraMode, recording]);
 
   useEffect(() => {
@@ -144,7 +146,7 @@ const VideoRecorder = () => {
       setStateComponent(false);
     }
   })
-  console.log(location.state.id,location.state.name,location.state.request,cameraMode,location.state.id,userCtx.loggedInUser.number)
+ 
   }
   
 
@@ -188,28 +190,6 @@ const VideoRecorder = () => {
     setSubmitted(true);
     uploadFile(newBlob);
   };
-
-  //   const postData = (url)=>{
-
-  //     const obj={
-
-  //       number: location.state.id,
-  //       respects:{
-  //         postedBy:"+91-1234567890",
-  //         cameraUsed:cameraMode,
-  //         selectedRank:location.state.selectedRank,
-  //         url:url
-  //       }
-  //     }
-
-  //       axios.post('https://respects-task.herokuapp.com/updateRespects',obj).then(()=>{
-  //         showProfile(location.state.id);
-  //       })
-  //   }
-
-  //   const showProfile =(id)=>{
-  //     navigate('/profile',{state:{id:id}})
-  //   }
 
   const backHandler = () => {
     navigate(-1);

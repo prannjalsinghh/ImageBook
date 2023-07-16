@@ -3,7 +3,7 @@ const GiveRespectEachContact = (props) => {
     <div
       style={{ backgroundColor: "#F5F8FA" }}
       className="flex gap-2 w-11/12 mx-auto p-[12px] btncls rounded-xl"
-      onClick={(e)=>props.clickHandler(props.item)}
+      onClick={(e)=>props.clickHandler(props.item.number,props.item.name,props.item.image)}
     >
       {props.type !== "unreg" && (
         <img

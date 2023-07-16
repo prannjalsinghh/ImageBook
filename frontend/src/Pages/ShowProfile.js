@@ -84,6 +84,7 @@ const ShowProfile = () => {
             </div>
             <div className='w-11/12 mx-auto mt-10'>
                 <div className='grid grid-cols-2 justify-center gap-4'>
+                    {console.log(obj?.givenRespects)}
                     {(type === "given" && route === 'Respect') &&
                         obj?.givenRespects?.map((each) => (
                             <EachRespect key={each._id} each={each}></EachRespect>
