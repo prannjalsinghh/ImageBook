@@ -20,7 +20,8 @@ const defaultUserCtx = {
         gender: '',
         givenRespects: [],
         recievedRespects: [],
-        notifications: []
+        notifications: [],
+        contacts: []
     }
 }
 
@@ -29,7 +30,7 @@ const userReducer = (state, action) => {
     if (action.type === 'SETLOGIN') {
         return {
             isLoggedIn: true,
-            isLoading:false,
+            
             loggedInUser: {
                 registered: action.user.registered,
                 accountCreationDate: action.user.accountCreationDate,
@@ -43,8 +44,10 @@ const userReducer = (state, action) => {
                 gender: action.user.gender,
                 givenRespects: action.user.givenRespects,
                 recievedRespects: action.user.recievedRespects,
-                notifications: action.user.notifications
-            }
+                notifications: action.user.notifications,
+                contacts: action.user.contacts
+            },
+            isLoading:false,
         }
     }
 
@@ -77,6 +80,7 @@ const UserProvider = (props) => {
 
     const userContext = {
         isLoggedIn: UserState.isLoggedIn,
+        isLoading:UserState.isLoading,
         loggedInUser: UserState.loggedInUser,
         setLogin: setLogin,
 

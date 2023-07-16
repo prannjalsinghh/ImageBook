@@ -18,6 +18,10 @@ const user={
         type:String,
         default:'https://i.stack.imgur.com/l60Hf.png'
     },
+    contacts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    }],
     verified:{
         type:Boolean,
         default:false

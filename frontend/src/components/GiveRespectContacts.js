@@ -40,6 +40,9 @@ const GiveRespectContacts = () => {
     setName(e.target.value);
   };
 
+  const clickHandler = (user)=>{
+    navigate(`/profile/${user.number}`);
+  }
   const backHandler = () => {
 
     if (searching === true) {
@@ -73,23 +76,11 @@ const GiveRespectContacts = () => {
             </div>
             <div className="flex flex-col gap-3 mt-[20px]">
               {arr.map((each) => (
-                <GiveRespectEachContact item={each} />
+                <GiveRespectEachContact item={each} clickHandler={clickHandler} />
               ))}
             </div>
           </div>
-          <div className="flex flex-row justify-between w-11/12 mx-auto mt-[27px]">
-            <p style={{ color: "#5E849C" }} className="text-sm font-semibold">
-              Invite on ImageBook
-            </p>
-            <p style={{ color: "#47B5FF" }} className="text-sm underline">
-              View All
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 mt-[20px]">
-            {unreg.map((each) => (
-              <GiveRespectEachContact item={each} type="unreg" />
-            ))}
-          </div>
+
         </>
       )}
       {searching && (

@@ -21,10 +21,11 @@ router.route('/postUsers').post(async (req, res) => {
 
     });
     await newUser.save();
-    console.log("user created");
+    res.send(newUser);
   }
   else if (foundData.length !== 0 && foundData[0]?.registered == false) {
     await User.findOneAndUpdate({ number: req.body.number }, { registered: true, name: req.body.name, accountCreationDate: Date.now() })
+    res.send('User registered');
   }
 })
 
@@ -32,36 +33,53 @@ router.route('/postUsers').post(async (req, res) => {
 
 
 router.route('/getUsers').get((req, res) => {
-  User.find().then((foundData) => res.send(foundData))
+  try{
+    User.find().then((foundData) => res.send(foundData))
+  }
+  catch(e){
+    res.send('Could not get users');
+  }
+  
 })
 router.route('/getUsers/:number').get((req, res) => {
   const phone = req.params.number;
-
-  User.find({ number: phone }).then((foundData) => res.send(foundData))
-
+  try{
+    User.find({ number: phone }).then((foundData) => res.send(foundData))
+  }
+  catch(e){
+    res.send('Could not get the user');
+  }
 })
 
 router.route("/updateGivenRespects").post((req, res) => {
-
-  User.findOneAndUpdate(
-    { number: req.body.number },
-    { $push: { givenRespects: req.body.respects } },
-  ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
-    res.send(foundData)
-  ))
+  try{
+    User.findOneAndUpdate(
+      { number: req.body.number },
+      { $push: { givenRespects: req.body.respects } },
+    ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
+      res.send(foundData)
+    ))
+  }catch(e){
+    res.send('Could not update the user');
+  }
+  
 })
 
 router.route("/updateUser").post((req, res) => {
-
-  User.findOneAndUpdate(
-    { number: req.body.number },
-    {  name: req.body.name,
-      image: req.body.image,
-      dateOfBirth: req.body.dateOfBirth,
-      gender: req.body.gender },
-  ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
-    res.send(foundData)
-  ))
+  try{
+    User.findOneAndUpdate(
+      { number: req.body.number },
+      {  name: req.body.name,
+        image: req.body.image,
+        dateOfBirth: req.body.dateOfBirth,
+        gender: req.body.gender },
+    ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
+      res.send(foundData)
+    ))
+  }
+  catch(e){
+    res.send('Could not update user');
+  }
 })
 
 
@@ -79,14 +97,14 @@ router.route("/updateRecievedRespects").post((req, res) => {
         recievedRespects: [req.body.respects],
         givenRespects: [],
       })
-      user.save().then(() => console.log('user created'));
+      user.save().then(() => res.send(user));
 
     }
     else {
       User.findOneAndUpdate(
         { number: req.body.number },
         { $push: { recievedRespects: req.body.respects }},
-      ).then(() => console.log("done")
+      ).then(() => res.send("done")
       )
       return;
     }
@@ -113,22 +131,61 @@ router.route('/createNonExistingUser').post(async (req, res) => {
     }
   })
 
-  
-
-  
-
 })
 
 router.route('/searchUserPartialNumber/:id').get(async (req,res)=>{
   let field = req.params.id;
+  try{
+    User.findOne({ number: { $regex: field.substring(1) , $options: "i" } }).then((foundData)=>res.send(foundData));
+  }
+  catch(e){
+    res.send('Not found');
+  }
   
-  User.findOne({ number: { $regex: field.substring(1) , $options: "i" } }).then((foundData)=>res.send(foundData));
 })
 
 
 router.route('/pushNotification').post(async (req,res) =>{
-  User.findOneAndUpdate({number:req.body.postedFor},{$push:{notifications: {sender:req.body.sender, request:req.body.request,time:req.body.time} }}).then(()=>res.send('done'))
+  User.findOneAndUpdate({number:req.body.postedFor},
+    {$push:{notifications: {sender:req.body.sender, request:req.body.request,time:req.body.time} }}
+    ).then(()=>res.send('done'))
 })
 
+router.route('/addToContacts').post(async (req,res)=>{
+  const user = await User.findOne({number:req.body.id});
+  const contact = await User.findOne({number:req.body.number});
+  try{
+    if(contact && !user.contacts.includes(contact._id)){
+      user.contacts.push(contact._id);
+      res.send(user);
+      user.save();
+    }
+    else{
+      throw new Error('Could not add contact');
+    }
+  }catch(e){
+    res.send(e.message);
+  } 
+})
 
+router.route('/getContacts/:id').get(async (req,res)=>{
+  try{
+    const user = await User.findOne({number:req.params.id});
+
+    if(!user){
+      throw new Error('User not found');
+    }
+    let contactList = [];
+
+    for(let i=0;i<user.contacts.length;i++){
+      let temp = await User.findOne({_id:user.contacts[i]})
+      contactList.push({id:temp._id,name:temp.name,number:temp.number,image:temp.image});
+    }
+    res.send(contactList);
+  }
+  catch(e){
+    res.send(e.message);
+  }
+
+})
 module.exports = router;

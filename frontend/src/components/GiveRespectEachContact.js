@@ -3,7 +3,7 @@ const GiveRespectEachContact = (props) => {
     <div
       style={{ backgroundColor: "#F5F8FA" }}
       className="flex gap-2 w-11/12 mx-auto p-[12px]  rounded-xl"
-      onClick={(e)=>props.setModalOpen(props.item.number,props.item.name,props.item.img)}
+      onClick={(e)=>props.clickHandler(props.item)}
     >
       {props.type !== "unreg" && (
         <img
@@ -13,7 +13,7 @@ const GiveRespectEachContact = (props) => {
             height: "60px",
             marginRight: "12px",
           }}
-          src={props.item.img}
+          src={props.item.image}
         />
       )}
       {props.type === "unreg" && (
