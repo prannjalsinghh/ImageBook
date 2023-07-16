@@ -22,9 +22,8 @@ const FooterHome = () => {
 
   return (
     <div className="w-full bg-[#F7F7F7] fixed bottom-0 z-50">
-      <div className="flex items-center justify-between w-11/12 mx-auto py-4">
-        <img src={home} alt="" />
-        <img src={film} alt="" />
+      <div className="flex items-center justify-between w-9/12 mx-auto py-4">
+        <img src={home} className="btncls" alt="" />
 
         <div
           style={{
@@ -40,14 +39,13 @@ const FooterHome = () => {
     marginLeft: "-15px"}}>
             <div
               className="flex items-center justify-center"
-              onClick={openSearchHandler}
+              onClick={()=>navigate('/contacts')}
             >
-              <img className="mt-[20px]" src={plus} alt="" />
+              <img className="mt-[20px] btncls" src={people} alt="" />
             </div>
           </div>
         </div>
-        <img src={people} alt="" />
-        <img src={person} onClick={navigateProfileHandler} alt="" />
+        <img src={person} className="btncls" onClick={navigateProfileHandler} alt="" />
       </div>
     </div>
   );

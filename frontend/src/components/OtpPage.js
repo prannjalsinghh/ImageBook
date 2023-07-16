@@ -72,7 +72,7 @@ const OtpPage = ({ setValid, number }) => {
                         <div className='rounded-[10px] border-2 border-[#D3DBE3] w-16 h-12 flex items-center justify-center text-center text-[22px] font-medium'>
                             <p className=''>{otp[3]}</p>
                         </div> */}
-                            <OtpInput className='rounded-[10px] border-2 border-[#D3DBE3] w-10 h-10 mr-3 flex items-center justify-center text-center text-[22px] font-medium' value={otp} onChange={handleChange} numInputs={6} />
+                            <OtpInput className='rounded-[10px] border-2 border-[#D3DBE3] w-10 h-10 mr-3 flex items-center justify-center text-center text-[22px] font-medium' value={otp} shouldAutoFocus={true} onChange={handleChange} numInputs={6} />
                         </div>
                         <div className='flex items-center justify-center space-x-4 mx-6 mb-4'>
                             <button className='w-[176px] h-[52px] bg-[#DFF6FF] rounded-lg font-semibold text-lg text-[#416C87]'>Resend OTP</button>

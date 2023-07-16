@@ -1,7 +1,7 @@
 import Navigator from "./Navigator";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ContactIcon from "../Assets/smartphone.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DoYouKnowImage from "../Assets/doYouKnowImage.png";
 import yes from "../Assets/yes.png";
 import no from "../Assets/no.png";
@@ -16,6 +16,12 @@ const SuggestName = () => {
   const navigate = useNavigate(); 
   const location = useLocation();
 
+
+  useEffect(()=>{
+    if(!location.state.id || !location.state.request){
+      navigate('/home');
+    }
+  },[])
 
   const backHandler = () => {
     navigate(-1);

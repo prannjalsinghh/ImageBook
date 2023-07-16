@@ -19,7 +19,7 @@ const SearchPage = () => {
 
   const navigate = useNavigate();
   const [input, setInput] = useState("");
-  const [searchResult,setSearchResult] =useState({});
+  const [searchResult,setSearchResult] =useState({}); 
 
   useEffect(()=>{
     onInputChange();
@@ -32,14 +32,13 @@ const SearchPage = () => {
       setSearchResult({
         name: data.name,
         number: data.number,
-        img: data.image,
+        image: data.image,
         registered:data.registered
       })
     }
     if(!data){
       setSearchResult(null)
     }
-    console.log(searchResult)
   }
   
 
@@ -69,7 +68,7 @@ const SearchPage = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-2">
-            <img className="hover:cursor-pointer" src={loveIcon} alt="" />
+            
             <img
               onClick={goToNotifications}
               className="hover:cursor-pointer"
@@ -114,7 +113,7 @@ const SearchPage = () => {
                   View All
                 </p>
               </div>
-              <div className="flex flex-col gap-3 mt-[20px]">
+               <div className="flex flex-col gap-3 mt-[20px]">
                 <ContactEach item={searchResult} />
               </div>
             </>

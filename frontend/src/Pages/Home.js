@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import RespectReceived from '../components/RespectReceived';
 import trophy from '../images/Home/trophy.png';
@@ -25,11 +25,18 @@ import respect from '../images/Home/respect.svg';
 import goodLuck from '../images/Home/goodLuck.svg';
 import promise from '../images/Home/promise.svg';
 import feedback from '../images/Home/feedback.svg';
+import Loading from '../components/Loader/Loading';
 
 const Home = () => {
+    
     const userCtx = useContext(UserContext);
     const [sidebar, setSidebar] = useState(false);
+    const [loading,setLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setLoading(userCtx.isLoading);
+    }, [userCtx.isLoading])
     
     const goToSearch = () => {
         navigate('/search')
@@ -54,6 +61,8 @@ const Home = () => {
 
     return (
         <div className='font-poppins relative min-h-screen'>
+            {loading && <Loading></Loading>}
+            {!loading && <>
             <Navbar sidebar={sidebar} setSidebar={setSidebar}></Navbar>
             <div className='w-11/12 mx-auto mb-8 relative'>
                 <input onFocus={goToSearch} className='w-full h-12 rounded-[10px] border-2 border-[#EBF1F4] pl-10 focus:outline-none text-lg text-[#5E849C]' type="text" name="" id="" placeholder='Check reputation' />
@@ -103,7 +112,7 @@ const Home = () => {
                         <div className='w-5/6 mx-auto'>
                             <div className='flex items-center justify-between mt-6 mb-8'>
                                 <p className='font-medium text-xl text-[#06283D]'>Menu</p>
-                                <img onClick={() => setSidebar(false)} src={xIcon} alt="" />
+                                <img onClick={() => setSidebar(false)} className='btncls' src={xIcon} alt="" />
                             </div>
                             <div className='flex items-center space-x-3 mt-3 mb-5'>
                                 <img style={{ width: "50px", height: "50px", borderRadius: "100px" }} src={userCtx.loggedInUser.image} alt="" />
@@ -117,27 +126,21 @@ const Home = () => {
                             </div>
                         </div>
                         <hr className='' />
-                        <div className='w-5/6 mx-auto flex items-center space-x-2 my-4'>
-                            <img src={wallet} alt="" />
-                            <p className='text-[#1B2328]'>Wallet</p>
-                        </div>
+                        
                         <hr />
-                        <div className='w-5/6 mx-auto flex items-center space-x-2 my-4'>
+                        <div onClick={()=>navigate('/notifications')} className='w-5/6 btncls mx-auto flex items-center space-x-2 my-4'>
                             <img src={notification} alt="" />
                             <p className='text-[#1B2328]'>Notification</p>
                         </div>
                         <hr />
-                        <div className='w-5/6 mx-auto flex items-center space-x-2 my-4'>
-                            <img src={location} alt="" />
-                            <p className='text-[#1B2328]'>Nearby People</p>
-                        </div>
+                        
                         <hr />
-                        <div className='w-5/6 mx-auto flex items-center space-x-2 my-4'>
+                        <div className='w-5/6 mx-auto flex items-center btncls space-x-2 my-4'>
                             <img src={settings} alt="" />
                             <p className='text-[#1B2328]'>Account Setting</p>
                         </div>
                         <hr />
-                        <div onClick={doSignOut} className='w-5/6 mx-auto flex items-center space-x-2 my-4'>
+                        <div onClick={doSignOut} className=' btncls w-5/6 mx-auto flex items-center space-x-2 my-4'>
                             <img src={logout} alt="" />
                             <p className='text-[#1B2328]'>Logout</p>
                         </div>
@@ -151,6 +154,7 @@ const Home = () => {
                     </div>
                 </div>
             }
+            </>}
         </div>
     );
 };

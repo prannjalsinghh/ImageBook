@@ -7,11 +7,20 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../store/userContext';
 import { useContext } from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import Loading from '../components/Loader/Loading';
 
 const Notifications = () => {
     const userCtx = useContext(UserContext);
-    
+    const [loading,setLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        setLoading(userCtx.isLoading);
+    }
+    ,[userCtx.isLoading])
+
     const goHome = () => {
         navigate('/home')
     }
@@ -28,6 +37,9 @@ const Notifications = () => {
                     </div>
                 </div>
             </div>
+            {loading && <Loading></Loading>}
+            {!loading && <>
+            {userCtx?.loggedInUser?.notifications?.length===0 && <div className='w-9/12 mx-auto text-gray-500'>No notifications here yet</div>}
             {userCtx?.loggedInUser?.notifications?.map((each) => (
                 <div className='bg-white'>
                 <div className='w-11/12 mx-auto'>
@@ -44,7 +56,7 @@ const Notifications = () => {
                 </div>
             </div>
             ))}
-            
+            </>}
             
         </div>
 

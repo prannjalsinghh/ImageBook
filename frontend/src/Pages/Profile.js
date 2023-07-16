@@ -19,6 +19,8 @@ import goodLuck from '../images/Home/goodLuck.svg';
 import promise from '../images/Home/promise.svg';
 import feedback from '../images/Home/feedback.svg';
 import Loading from "../components/Loader/Loading";
+import AddContact from '../Assets/addcontact.png';
+import tick from '../Assets/tick.png';
 
 const Profile = () => {
   const userCtx = useContext(UserContext);
@@ -30,15 +32,24 @@ const Profile = () => {
   const [notExist, setNotExist] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [added,setAdded] = useState(false);
 
   useEffect(() => {
     getUser();
 
+
     if (params.id === userCtx.loggedInUser.number) {
       setIsMyProfile(true);
     }
+    
   }, [params.id, userCtx.loggedInUser.number]);
 
+  useEffect(() => {
+    console.log(userCtx.loggedInUser.contacts, obj._id)
+    if(userCtx.loggedInUser.contacts.includes(obj._id)){
+      setAdded(true);
+    }
+  }, [obj,params.id, userCtx.loggedInUser.number])
   const getUser = async () => {
     setLoading(true);
     const response = await axios.get(
@@ -67,6 +78,14 @@ const Profile = () => {
     navigate('/showProfile', { state: { id: route, obj: obj } });
   }
 
+  const addContactHandler = async () => {
+    const data = {
+      id:userCtx.loggedInUser.number,
+      number:obj?.number
+    }
+    await axios.post(`https://imagebook.onrender.com/addToContacts`,data);
+    setAdded(true);
+  }
   return (
     <>
       {loading && <Loading/>}
@@ -156,11 +175,14 @@ const Profile = () => {
             </div>
           </div>
 
+          {!added && <div onClick={addContactHandler} style={{background:"linear-gradient(270deg, rgb(106, 17, 203) 0%, rgb(37, 117, 252) 100%)"}} className=" right-[10px] rounded-[50%] absolute bottom-[80px] w-[50px] bg-[linear-gradient(270deg, rgb(106, 17, 203) 0%, rgb(37, 117, 252) 100%)] ">
+            <img src={AddContact}/>
+          </div>}
+
       </>)}
       <div className="w-full bg-[#F7F7F7] fixed bottom-0 z-50">
-        <div className="flex items-center justify-between w-11/12 mx-auto py-4">
+        <div className="flex items-center btncls justify-between w-9/12 mx-auto py-4">
           <img src={home} alt="" onClick={()=>navigate('/home')}/>
-          <img src={film} alt="" />
 
           <div
             style={{
@@ -172,20 +194,19 @@ const Profile = () => {
               borderRadius: "9999px"
             }}
           >
-            <div className="bg-[#1363DF] rounded-full w-16 h-16 m-[5px] shadow " style={{
+            <div className="bg-[#1363DF] rounded-full w-16 h-16 m-[5px] btncls shadow " style={{
               marginTop: "-15px",
               marginLeft: "-15px"
             }}>
               <div
                 className="flex items-center justify-center"
-                onClick={openSearchHandler}
+                onClick={()=>navigate('/contacts')}
               >
-                <img className="mt-[20px]" src={plus} alt="" />
+                <img className="mt-[20px]" src={people} alt="" />
               </div>
             </div>
           </div>
-          <img src={people} alt="" />
-          <img src={person} alt="" />
+          <img onClick={()=>navigate(`/${userCtx.loggedInUser.number}`)} src={person} className="btncls" on alt="" />
         </div>
       </div>
       {/* Footer Ends */}</>)}

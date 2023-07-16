@@ -53,6 +53,7 @@ const VideoRecorder = () => {
     }
   }, [recordedChunks]);
 
+  
   function muteMe(elem) {
     elem.muted = true;
   }
@@ -223,7 +224,7 @@ const VideoRecorder = () => {
             backHandler={backHandler}
             type="overlay"
           />
-          <div className={styles.container}>
+          <div className={styles.container} >
             <div>
               {(recording === "def" || recording === "recording") && (
                 <>

@@ -20,10 +20,10 @@ const Navigator = (props) => {
 
         }}>
             <div className={styles.left}>
-                <div onClick={backHandler}><ArrowBackIcon /></div>
+                <div className='btncls' onClick={backHandler}><ArrowBackIcon /></div>
                 <h3 className='text-xl font-semibold'>{props.heading}</h3>
             </div>
-            <div className='flex items-start space-x-4'>
+            <div className='btncls flex items-start space-x-4'>
                 {props.icon === 'share' && <ShareIcon />}
                 <img onClick={navigateEditprofile} src={editIcon} alt="" />
             </div>

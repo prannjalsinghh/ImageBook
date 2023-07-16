@@ -9,8 +9,8 @@ const ContactEach = (props) => {
 
     return (
         
-            <div style={{ backgroundColor: "#F5F8FA" }} className="flex gap-2 w-11/12 mx-auto p-[12px]  rounded-xl" onClick={openProfileHandler}>
-                {props.type !== 'unreg' && <img style={{ borderRadius: "200px", width: "60px", height: "60px", marginRight: "12px" }} src={props.item.img} />}
+            <div style={{ backgroundColor: "#F5F8FA" }} className="flex btncls gap-2 w-11/12 mx-auto p-[12px]  rounded-xl" onClick={openProfileHandler}>
+                {props.type !== 'unreg' && <img style={{ borderRadius: "200px", width: "60px", height: "60px", marginRight: "12px" }} src={props.item.image} />}
                 {props.type === 'unreg' && <img style={{ borderRadius: "200px", width: "60px", height: "60px", marginRight: "12px" }} src="https://i.stack.imgur.com/l60Hf.png" />}
                 <div>
                     <p className="text-lg">{props.item.name}</p>

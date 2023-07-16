@@ -25,6 +25,11 @@ const GiveRespectSearchPage = () => {
   const [input, setInput] = useState("");
   const [searchResult,setSearchResult] =useState({});
 
+  useEffect(()=>{
+    if(!location.state.id){
+      navigate('/home');
+    }
+  },[])
 
   useEffect(()=>{
     onInputChange();
@@ -40,7 +45,7 @@ const GiveRespectSearchPage = () => {
       setSearchResult({
         name: data.name,
         number: data.number,
-        img: data.image,
+        image: data.image,
         registered:data.registered
       })
     }
@@ -60,7 +65,7 @@ const GiveRespectSearchPage = () => {
   const suggestNameHandler = ()=>{
     navigate('/suggestName',{state:{id:input,request:location.state.id}})
   }
-  const setModalOpen = (number,name,img)=>{
+  const clickHandler = (number,name,img)=>{
     navigate('/video',{state:{id:number,name:name,img:img,request:location.state.id}})
   }
   return (
@@ -76,7 +81,6 @@ const GiveRespectSearchPage = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-2">
-            <img className="hover:cursor-pointer" src={loveIcon} alt="" />
             <img
               onClick={goToNotifications}
               className="hover:cursor-pointer"
@@ -96,7 +100,7 @@ const GiveRespectSearchPage = () => {
             onChange={setInput}
           />
           <div
-            className="w-[44px] h-12 shadow-lg rounded-xl flex items-center justify-center"
+            className="w-[44px] h-12 shadow-lg rounded-xl flex btncls items-center justify-center"
             onClick={openContactHandler}
           >
             <img src={person} alt="" />
@@ -125,7 +129,7 @@ const GiveRespectSearchPage = () => {
         
           {(input && searchResult && searchResult.registered==true ) && <div className="mt-[20px]">
             
-              <GiveRespectEachContact item={searchResult} setModalOpen={setModalOpen} />
+              <GiveRespectEachContact item={searchResult} clickHandler={clickHandler} />
             </div>}
         {input && input!==userCtx.loggedInUser.number && (!searchResult || searchResult?.registered==false) && isPossiblePhoneNumber(input) && (
             <>

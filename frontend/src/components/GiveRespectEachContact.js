@@ -2,7 +2,7 @@ const GiveRespectEachContact = (props) => {
   return (
     <div
       style={{ backgroundColor: "#F5F8FA" }}
-      className="flex gap-2 w-11/12 mx-auto p-[12px]  rounded-xl"
+      className="flex gap-2 w-11/12 mx-auto p-[12px] btncls rounded-xl"
       onClick={(e)=>props.clickHandler(props.item)}
     >
       {props.type !== "unreg" && (

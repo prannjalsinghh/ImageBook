@@ -6,27 +6,31 @@ import './DetectLocation.css';
 import cross from '../images/cross.png';
 import cameraPill from '../images/cameraPill.png';
 import galleryPill from '../images/galleryPill.png';
+import Loading from './Loader/Loading';
 
 const  ChangePicture = ({ setUploadImage }) => {
     const userCtx = useContext(UserContext);
     const [image, setImage] = React.useState();
+    const [loading,setLoading] = React.useState(false);
 
     const imageSetter = (e) => {
         setImage(e.target.files[0]);
     };
-    const imageUploader = () => {
+    const imageUploader = async  () => {
         const formData = new FormData();
         formData.append('file', image);
         formData.append("upload_preset", "cok0kqhe");
-
-        axios.post("https://api.cloudinary.com/v1_1/djdqb8feb/image/upload", formData).then((response) => {
+        setLoading(true);
+        await axios.post("https://api.cloudinary.com/v1_1/djdqb8feb/image/upload", formData).then(async (response) => {
         if (response.status === 200) {
 
         let link = response.data.secure_url;
         console.log(link);
 
-        axios.post('https://imagebook.onrender.com/updateUser', { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender });
+        await axios.post('https://imagebook.onrender.com/updateUser', { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender });
         console.log('updated');
+        setUploadImage(false);
+        setLoading(false);
         }});
         }
 
@@ -34,7 +38,8 @@ const  ChangePicture = ({ setUploadImage }) => {
     return (
         <div>
             <div className="backdrop-location" />
-            <div className='fixed bottom-0 left-0 right-0 w-full z-[1000]'>
+            {loading && <Loading/>}
+            {!loading && <div className='fixed bottom-0 left-0 right-0 w-full z-[1000]'>
                 <div className='w-full mx-auto bg-white rounded-t-3xl'>
                     <div className='w-11/12 mx-auto '>
                         <div className='flex items-center justify-between pt-4 pb-3'>
@@ -47,7 +52,7 @@ const  ChangePicture = ({ setUploadImage }) => {
 
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

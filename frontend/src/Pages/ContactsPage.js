@@ -11,6 +11,7 @@ import axios from "axios";
 import { useContext } from "react";
 import UserContext from "../store/userContext";
 import { set } from "mongoose";
+import Loading from "../components/Loader/Loading";
 
 const ContactsPage = () => {
   
@@ -23,15 +24,20 @@ const ContactsPage = () => {
   const [sentUser,setSentUser ] = useState('')
   const navigate = useNavigate()
   const userCtx = useContext(UserContext);
+  const [loading,setLoading] = useState(true);
 
   useEffect(()=>{
     loadData();
   },[userCtx.loggedInUser.number])
+
+    useEffect(()=>{
+      setLoading(userCtx.isLoading)
+    },[userCtx.isLoading])
+
   const loadData = async ()=>{
-    console.log(userCtx.loggedInUser.number)
-    const res = await axios.get(`http://localhost:5000/getContacts/${userCtx.loggedInUser.number}`)
-    console.log(res.data)
+    const res = await axios.get(`https://imagebook.onrender.com/getContacts/${userCtx.loggedInUser.number}`)
     setArr(res.data);
+    console.log(res.data)
   }
 
   const searchNameHandler = (e) => {
@@ -64,6 +70,8 @@ const ContactsPage = () => {
   return (
     <>
       <Navigator heading="Select Contact" backHandler={backHandler} />
+      {loading && <Loading/>}
+      {!loading && <>
       {!searching && (
         <>
           {" "}
@@ -78,24 +86,18 @@ const ContactsPage = () => {
               <p style={{ color: "#5E849C" }} className="text-sm font-semibold">
                 Contacts on ImageBook
               </p>
-              <p style={{ color: "#47B5FF" }} className="text-sm underline">
-                View All
-              </p>
+              
             </div>
             <div className="flex flex-col gap-3 mt-[20px]">
-              {location.state.id==='search' && arr?.map((each) => (
+              { arr?.map((each) => (
                 <ContactEach item={each} />
               ))}
-              {location.state.id==='send' && arr?.map((each) => (
-                <GiveRespectEachContact setModalOpen={setModalOpen} item={each} />
-              ))
-              }
             </div>
           </div>
           
         </>
       )}
-      {/* {searching && (
+       {searching && (
         <div className="flex flex-col">
           <div className="flex justify-center items-center gap-3 mt-[40px] w-11/12 mx-auto">
             <div className="flex items-center gap-2 box-border border-2 rounded-md w-5/6">
@@ -120,21 +122,18 @@ const ContactsPage = () => {
             </p>
           </div>
             <div className="flex flex-col gap-3 mt-[20px]">
-              {location.state.id==='search' && arr
+              { arr
                 .filter((obj) => obj.name.includes(name))
                 .map((each) => (
                   <ContactEach item={each} />
                 ))}
-                {location.state.id==='send' && arr
-                .filter((obj) => obj.name.includes(name))
-                .map((each) => (
-                  <GiveRespectEachContact item={each} />
-                ))}
+                
             </div>
             </>}
         </div>
       )}
-      {modal && <RespectModal name={sentUser.name} number={sentUser.number} img={sentUser.img} closeHandler={modalCloseHandler}/>} */}
+      {/*{modal && <RespectModal name={sentUser.name} number={sentUser.number} img={sentUser.img} closeHandler={modalCloseHandler}/>} */}
+      </>}
     </>
   );
 };
