@@ -10,8 +10,15 @@ const NewCreatedUserProfile = ()=>{
     const location = useLocation();
 
     useEffect(()=>{
+
+        if(!location.state.id || !location.state.request)
+            navigate('/home');
+         
         loadUser();
     },[])
+
+
+
     const loadUser = async ()=>{
         const res = await axios.get(`https://imagebook.onrender.com/getUsers/${location.state.id}`)
         const data = res.data;
