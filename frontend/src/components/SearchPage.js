@@ -26,7 +26,8 @@ const SearchPage = () => {
   },[input]);
 
   const onInputChange = async ()=>{
-    const res = await axios.get(`https://imagebook.onrender.com/searchUserPartialNumber/${input}`)
+    const res = await axios.get(`https://imagebook.onrender.com/searchUserPartialNumber/${input}`,
+    {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
     const data = res.data;
     if(data && data.number!==userCtx.loggedInUser.number){
       setSearchResult({

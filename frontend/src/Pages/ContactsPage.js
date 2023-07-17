@@ -35,7 +35,8 @@ const ContactsPage = () => {
     },[userCtx.isLoading])
 
   const loadData = async ()=>{
-    const res = await axios.get(`https://imagebook.onrender.com/getContacts/${userCtx.loggedInUser.number}`)
+    const res = await axios.get(`https://imagebook.onrender.com/getContacts/${userCtx.loggedInUser.number}`,
+    {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
     setArr(res.data);
     console.log(res.data)
   }

@@ -81,7 +81,8 @@ const Profile = () => {
       id: userCtx.loggedInUser.number,
       number: obj?.number,
     };
-    await axios.post(`https://imagebook.onrender.com/addToContacts`, data);
+    await axios.post(`https://imagebook.onrender.com/addToContacts`, data,
+    {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}});
     setAdded(true);
   };
   return (

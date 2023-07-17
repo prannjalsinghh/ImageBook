@@ -60,7 +60,9 @@ const EditProfile = () => {
             dateOfBirth: date,
             gender:gender
         }
-        await axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser);
+        await axios.post(('https://imagebook.onrender.com/updateUser'), updatedUser,{
+            headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}` }
+        });
         
         setUpdateProfile(false);
 
