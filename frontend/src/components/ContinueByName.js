@@ -9,34 +9,37 @@ import img from '../images/continuebyname.png';
 
 const ContinueByName = ({ number }) => {
   const userCtx = useContext(UserContext);
-
+  const [error,setError] = React.useState('');
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const userName = data.firstName.trim() + " " + data.lastName.trim();
 
     const user = {
       number: number,
       name: userName,
     };
-    axios.post('https://imagebook.onrender.com/postUsers', user);
-
-
-    fetch(`https://imagebook.onrender.com/getUsers/${user.number}`)
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log('data', data);
-
-        userCtx.setLogin(data[0]);
-        navigate("/home");
-      });
-
-
-
+    try{
+      await axios.post('https://imagebook.onrender.com/postUsers', user);
+    }catch(e){
+      setError("Failed to login")
+      console.log(e);
+    }
+    
+    try{
+      const res = await axios.post(`https://imagebook.onrender.com/loginByNumber`,{number:number});
+      const data1 = res.data;
+      userCtx.setLogin(data1[0]);
+      localStorage.setItem('loggedInUser',data1[0].number)
+      navigate("/home");
+    }catch(e){
+      setError("Failed to login")
+      console.log(e);
+    }
 
   };
 
@@ -65,6 +68,7 @@ const ContinueByName = ({ number }) => {
           id=""
           required
         />
+        {error && <p className='text-red-500 text-sm'>{error}</p> }
         <button
           type="submit"
           className=" flex items-center justify-center space-x-2 bg-[#1363DF] w-full h-[52px] rounded text-white font-semibold text-lg"

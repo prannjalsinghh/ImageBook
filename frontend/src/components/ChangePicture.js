@@ -8,29 +8,39 @@ import cameraPill from '../images/cameraPill.png';
 import galleryPill from '../images/galleryPill.png';
 import Loading from './Loader/Loading';
 
-const  ChangePicture = ({ setUploadImage }) => {
+const  ChangePicture = ({ sendImage,setUploadImage }) => {
     const userCtx = useContext(UserContext);
     const [image, setImage] = React.useState();
     const [loading,setLoading] = React.useState(false);
+    const [error,setError] = React.useState('');
 
     const imageSetter = (e) => {
         setImage(e.target.files[0]);
+        setError('');
     };
+
+    const sentImage = (link) => {
+        sendImage(link);
+    }
+
     const imageUploader = async  () => {
+        if(!image){
+            setError('Please select an image');
+            return;
+        }
         const formData = new FormData();
         formData.append('file', image);
         formData.append("upload_preset", "cok0kqhe");
         setLoading(true);
         await axios.post("https://api.cloudinary.com/v1_1/djdqb8feb/image/upload", formData).then(async (response) => {
         if (response.status === 200) {
+            let link = response.data.secure_url;
 
-        let link = response.data.secure_url;
-        console.log(link);
-
-        await axios.post('https://imagebook.onrender.com/updateUser', { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender });
-        console.log('updated');
-        setUploadImage(false);
-        setLoading(false);
+            await axios.post('https://imagebook.onrender.com/updateUser', { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender });
+            console.log('updated');
+            setUploadImage(false);
+            setLoading(false);
+            sentImage(link);
         }});
         }
 
@@ -47,7 +57,8 @@ const  ChangePicture = ({ setUploadImage }) => {
                             <img onClick={() => setUploadImage(false)} src={cross} alt="" />
                         </div>
                         <hr className='border-[1px] border-[#CCEAFF] mb-4' />
-                        <input type='file' id='file' placeholder='here' onChange={imageSetter}></input>
+                        <input type='file' id='file' placeholder='here' accept='image/png, image/jpg, image/jpeg' onChange={imageSetter}></input>
+                        {error && <p className='text-red-500 text-sm'>{error}</p> }
                         <button className='w-full h-12 mt-[10px] rounded-[10px] bg-[#1363DF] text-white text-md font-semibold' onClick={imageUploader}>Upload</button>
 
                     </div>

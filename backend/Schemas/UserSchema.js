@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
-const user={
+
+const userSchema=new mongoose.Schema({
     registered:{
         type:Boolean,
         default:false
@@ -18,6 +21,12 @@ const user={
         type:String,
         default:'https://i.stack.imgur.com/l60Hf.png'
     },
+    tokens:[{
+        token:{
+            type:String,
+            required:true
+        }
+    }],
     contacts:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
@@ -85,8 +94,16 @@ const user={
         }
 
     }]
+})
+
+userSchema.methods.generateAuthToken = async function(){
+    const user = this;
+    const token = jwt.sign({_id:this._id},process.env.JWT_SECRET);
+    user.tokens = user.tokens.concat({token});
+    await user.save();
+    return token;
 }
 
-const User = mongoose.model('Users',user)
+const User = mongoose.model('Users',userSchema)
 
 module.exports = User;

@@ -1,191 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Schemas/UserSchema");
-
-router.route('/postUsers').post(async (req, res) => {
-
-  const foundData = await User.find({ number: req.body.number })
-  if (foundData.length === 0) {
-    const user = {
-      name: req.body.name,
-      number: req.body.number,
-      accountCreationDate: Date.now()
-    };
-    const newUser = new User({
-      registered: true,
-      name: user.name,
-      number: user.number,
-      accountCreationDate: user.accountCreationDate,
-      givenRespects: [],
-      recievedRespects: []
-
-    });
-    await newUser.save();
-    res.send(newUser);
-  }
-  else if (foundData.length !== 0 && foundData[0]?.registered == false) {
-    await User.findOneAndUpdate({ number: req.body.number }, { registered: true, name: req.body.name, accountCreationDate: Date.now() })
-    res.send('User registered');
-  }
-})
+const auth = require("../auth");
+const {postUser, getUserByNumber, updateUserGivenRespects, updateUser, updateRecievedRespects, createNonExistingUser, searchUserPartialNumber, pushNotification, addToContacts, getContacts} = require('../Controller/Authorization');
+const {loginByNumber,logout,loginByToken} = require('../Controller/Tasks');
 
 
+router.post('/postUsers',postUser);
+router.get('/getUsers/:number',auth,getUserByNumber)
+router.post('/loginByNumber',loginByNumber)
+router.post('/loginByToken',auth,loginByToken)
+router.post('/logout',auth,logout)
+router.post('/updateGivenRespects',auth,updateUserGivenRespects)
+router.post('/updateUser',auth,updateUser)
+router.post('/updateRecievedRespects',auth,updateRecievedRespects)
+router.post('/createNonExistingUser',auth,createNonExistingUser)
+router.get('/searchUserPartialNumber/:id',auth,searchUserPartialNumber)
+router.post('/pushNotification',auth,pushNotification)
+router.post('/addToContacts',auth,addToContacts)
+router.get('/getContacts/:id',auth,getContacts);
 
-
-router.route('/getUsers').get((req, res) => {
-  try{
-    User.find().then((foundData) => res.send(foundData))
-  }
-  catch(e){
-    res.send('Could not get users');
-  }
-  
-})
-router.route('/getUsers/:number').get((req, res) => {
-  const phone = req.params.number;
-  try{
-    User.find({ number: phone }).then((foundData) => res.send(foundData))
-  }
-  catch(e){
-    res.send('Could not get the user');
-  }
-})
-
-router.route("/updateGivenRespects").post((req, res) => {
-  try{
-    User.findOneAndUpdate(
-      { number: req.body.number },
-      { $push: { givenRespects: req.body.respects } },
-    ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
-      res.send(foundData)
-    ))
-  }catch(e){
-    res.send('Could not update the user');
-  }
-  
-})
-
-router.route("/updateUser").post((req, res) => {
-  try{
-    User.findOneAndUpdate(
-      { number: req.body.number },
-      {  name: req.body.name,
-        image: req.body.image,
-        dateOfBirth: req.body.dateOfBirth,
-        gender: req.body.gender },
-    ).then(() => User.findOne({ number: req.body.number }).then((foundData) =>
-      res.send(foundData)
-    ))
-  }
-  catch(e){
-    res.send('Could not update user');
-  }
-})
-
-
-
-
-router.route("/updateRecievedRespects").post((req, res) => {
-
-  User.find({ number: req.body.number }).then((foundData) => {
-    if (foundData?.length == 0) {
-      const user = new User({
-        registered: false,
-        name: req.body.name,
-        number: req.body.number,
-        accountCreationDate: Date.now(),
-        recievedRespects: [req.body.respects],
-        givenRespects: [],
-      })
-      user.save().then(() => res.send(user));
-
-    }
-    else {
-      User.findOneAndUpdate(
-        { number: req.body.number },
-        { $push: { recievedRespects: req.body.respects }},
-      ).then(() => res.send("done")
-      )
-      return;
-    }
-  })
-
-
-});
-
-router.route('/createNonExistingUser').post(async (req, res) => {
-
-  User.find({number:req.body.number}).then((foundData)=>{
-    if(foundData.length===0){
-      const user = new User({
-        registered: false,
-        name: req.body.name,
-        number: req.body.number,
-        givenRespects: [],
-        recievedRespects: []
-      })
-       user.save().then(() => res.send(user));
-    }
-    else{
-      User.findOneAndUpdate({number:req.body.number},{name:req.body.name}).then((doc)=>res.send(doc))
-    }
-  })
-
-})
-
-router.route('/searchUserPartialNumber/:id').get(async (req,res)=>{
-  let field = req.params.id;
-  try{
-    User.findOne({ number: { $regex: field.substring(1) , $options: "i" } }).then((foundData)=>res.send(foundData));
-  }
-  catch(e){
-    res.send('Not found');
-  }
-  
-})
-
-
-router.route('/pushNotification').post(async (req,res) =>{
-  User.findOneAndUpdate({number:req.body.postedFor},
-    {$push:{notifications: {sender:req.body.sender, request:req.body.request,time:req.body.time} }}
-    ).then(()=>res.send('done'))
-})
-
-router.route('/addToContacts').post(async (req,res)=>{
-  const user = await User.findOne({number:req.body.id});
-  const contact = await User.findOne({number:req.body.number});
-  try{
-    if(contact && !user.contacts.includes(contact._id)){
-      user.contacts.push(contact._id);
-      res.send(user);
-      user.save();
-    }
-    else{
-      throw new Error('Could not add contact');
-    }
-  }catch(e){
-    res.send(e.message);
-  } 
-})
-
-router.route('/getContacts/:id').get(async (req,res)=>{
-  try{
-    const user = await User.findOne({number:req.params.id});
-
-    if(!user){
-      throw new Error('User not found');
-    }
-    let contactList = [];
-
-    for(let i=0;i<user.contacts.length;i++){
-      let temp = await User.findOne({_id:user.contacts[i]})
-      contactList.push({id:temp._id,name:temp.name,number:temp.number,image:temp.image});
-    }
-    res.send(contactList);
-  }
-  catch(e){
-    res.send(e.message);
-  }
-
-})
 module.exports = router;

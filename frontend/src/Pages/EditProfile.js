@@ -34,7 +34,10 @@ const EditProfile = () => {
 
     useEffect(()=>{
         setLoading(userCtx.isLoading);
-    },[userCtx.isLoading])
+        setImage(userCtx.loggedInUser.image);
+        setName(userCtx.loggedInUser.name);
+        setGender(userCtx.loggedInUser.gender)
+    },[userCtx.isLoading,uploadImage])
 
     const navigate = useNavigate();
     const goHome = () => {
@@ -118,7 +121,7 @@ const EditProfile = () => {
                 </form>
 
                 {
-                    uploadImage && <ChangePicture setUploadImage={setUploadImage}></ChangePicture>
+                    uploadImage && <ChangePicture setUploadImage={setUploadImage} sendImage = {(link)=>setImage(link)}></ChangePicture>
                 }
                 {
                     updateProfile && <ProfileUpdated updateProfile={updateProfile} setUpdateProfile={setUpdateProfile}></ProfileUpdated>
