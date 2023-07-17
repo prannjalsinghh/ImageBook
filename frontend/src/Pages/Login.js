@@ -14,6 +14,7 @@ import login from '../images/num-pad/checkmark-circle-2.png';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../store/userContext';
 import { useContext } from 'react';
+import axios from 'axios';
 
 const Login = () => {
     const userCtx = useContext(UserContext);
@@ -74,14 +75,23 @@ const Login = () => {
         confirmationResult.confirm(otp).then((result) => {
             fetch(`https://imagebook.onrender.com/getUsers/${number}`)
                 .then(res => res.json())
-                .then(data => {
+                .then(async (data) => {
                     if (data.length === 0 || data[0]?.registered === false) {
                         setHidden(true);
                     }
                     else {
-                        userCtx.setLogin(data[0]);
-                        localStorage.setItem('loggedInUser', number);
-                        navigate('/home');
+                        // userCtx.setLogin(data[0]);
+                        // localStorage.setItem('loggedInUser', number);
+                        // navigate('/home');
+                        try{
+                            const res = await axios.post(`https://imagebook.onrender.com/loginByNumber`,{number:number});
+                            const data1 = res.data;
+                            userCtx.setLogin(data1.user);
+                            localStorage.setItem('loggedInUser',data1.token)
+                            navigate("/home");
+                        }catch(e){
+                            console.log(e);
+                        }
                     }
                 })
             // setHidden(true);

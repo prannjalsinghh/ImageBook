@@ -35,7 +35,6 @@ const userReducer = (state, action) => {
             loggedInUser: {
                 registered: action.user.registered,
                 accountCreationDate: action.user.accountCreationDate,
-                tokens: action.user.tokens,
                 name: action.user.name,
                 number: action.user.number,
                 image: action.user.image,
@@ -70,9 +69,11 @@ const UserProvider = (props) => {
     const [UserState, dispatchUserState] = useReducer(userReducer, defaultUserCtx);
     const getLoggedInUser = async () => {
         if (localStorage.getItem('loggedInUser')) {
-            const res = await axios.post(`https://imagebook.onrender.com/loginByToken/${localStorage.getItem('loggedInUser')}`,{})
+            const res = await axios.post(`https://imagebook.onrender.com/loginByToken`,{token:localStorage.getItem('loggedInUser')},
+            {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}` }})
             const data = res?.data;
-            setLogin(data[0])
+            console.log(data);
+            setLogin(data)
         }
     }
     const setLogin = (user) => {

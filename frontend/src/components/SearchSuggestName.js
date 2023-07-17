@@ -19,7 +19,8 @@ const SearchSuggestName = () => {
   const unlockProfileHandler = async () => {
     let obj = { name: name, number: location.state.id }
     setLoading(true);
-    await axios.post(`https://imagebook.onrender.com/createNonExistingUser`, obj)
+    await axios.post(`https://imagebook.onrender.com/createNonExistingUser`, obj,
+    {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
     setLoading(false);
     navigate(`/${location.state.id}`)
 

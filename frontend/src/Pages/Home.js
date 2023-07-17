@@ -36,6 +36,7 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(userCtx.isLoading);
+        {console.log(userCtx.loggedInUser)}
     }, [userCtx.isLoading])
     
     const goToSearch = () => {
@@ -101,7 +102,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <RespectReceived></RespectReceived>
+            
             {/* <SpreadRespect></SpreadRespect> */}
             {/* <InvitePeople></InvitePeople> */}
             <FooterHome></FooterHome>

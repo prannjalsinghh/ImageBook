@@ -7,7 +7,7 @@ const {loginByNumber,logout,loginByToken} = require('../Controller/Tasks');
 
 
 router.post('/postUsers',postUser);
-router.get('/getUsers/:number',auth,getUserByNumber)
+router.get('/getUsers/:number',getUserByNumber)
 router.post('/loginByNumber',loginByNumber)
 router.post('/loginByToken',auth,loginByToken)
 router.post('/logout',auth,logout)

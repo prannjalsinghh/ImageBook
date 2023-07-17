@@ -36,7 +36,9 @@ const  ChangePicture = ({ sendImage,setUploadImage }) => {
         if (response.status === 200) {
             let link = response.data.secure_url;
 
-            await axios.post('https://imagebook.onrender.com/updateUser', { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender });
+            await axios.post('https://imagebook.onrender.com/updateUser', 
+            { number: userCtx.loggedInUser.number, name: userCtx.loggedInUser.name ,image: link, dateOfBirth: userCtx.isLoggedIn.dateOfBirth, gender: userCtx.isLoggedIn.gender },
+            {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}});
             console.log('updated');
             setUploadImage(false);
             setLoading(false);

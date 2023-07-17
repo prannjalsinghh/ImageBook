@@ -140,9 +140,12 @@ const VideoRecorder = () => {
             selectedType: location.state.request
           }
         }
-       axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj)
-       axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1)
-       axios.post(`https://imagebook.onrender.com/pushNotification`, {postedFor: location.state.id, sender:userCtx.loggedInUser.number,request:location.state.request,time:Date.now()})
+       axios.post(`https://imagebook.onrender.com/updateGivenRespects`, obj,
+       {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
+       axios.post(`https://imagebook.onrender.com/updateRecievedRespects`, obj1,
+       {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
+       axios.post(`https://imagebook.onrender.com/pushNotification`, {postedFor: location.state.id, sender:userCtx.loggedInUser.number,request:location.state.request,time:Date.now()},
+       {headers: { Authorization: `Bearer ${localStorage.getItem('loggedInUser')}`}})
       setStateComponent(false);
     }
   })

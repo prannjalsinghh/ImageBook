@@ -33,8 +33,8 @@ const ContinueByName = ({ number }) => {
     try{
       const res = await axios.post(`https://imagebook.onrender.com/loginByNumber`,{number:number});
       const data1 = res.data;
-      userCtx.setLogin(data1[0]);
-      localStorage.setItem('loggedInUser',data1[0].number)
+      userCtx.setLogin(data1.user);
+      localStorage.setItem('loggedInUser',data1.token)
       navigate("/home");
     }catch(e){
       setError("Failed to login")
