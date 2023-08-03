@@ -26,8 +26,7 @@ const OnBoarding = () => {
         <p className="font-semibold text-2xl mt-5">Welcome to ImageBook</p>
         {onboarding === "1" && (
           <p className="mx-9 text-center mt-3 text-sm text-black">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Feugiat
-            tempus cursus et faucibus venenatis consectetur sed auctor.
+            
           </p>
         )}
         {onboarding === "2" && (

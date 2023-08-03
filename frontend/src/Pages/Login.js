@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../store/userContext';
 import { useContext } from 'react';
 import axios from 'axios';
+import Loading from '../components/Loader/Loading';
 
 const Login = () => {
     const userCtx = useContext(UserContext);
@@ -26,6 +27,8 @@ const Login = () => {
     // otp screen
     const [hidden, setHidden] = useState(false);;
     const [otp, setOtp] = useState("");
+    const [Error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const handleChange = (enteredOtp) => {
         setOtp(enteredOtp);
@@ -72,34 +75,36 @@ const Login = () => {
     const handleVerify = (e) => {
         e.preventDefault();
         const confirmationResult = window.confirmationResult;
-        confirmationResult.confirm(otp).then((result) => {
-            fetch(`https://imagebook.onrender.com/getUsers/${number}`)
-                .then(res => res.json())
-                .then(async (data) => {
-                    if (data.length === 0 || data[0]?.registered === false) {
-                        setHidden(true);
-                    }
-                    else {
-                        // userCtx.setLogin(data[0]);
-                        // localStorage.setItem('loggedInUser', number);
-                        // navigate('/home');
-                        try{
-                            const res = await axios.post(`https://imagebook.onrender.com/loginByNumber`,{number:number});
-                            const data1 = res.data;
-                            userCtx.setLogin(data1.user);
-                            localStorage.setItem('loggedInUser',data1.token)
-                            navigate("/home");
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-            // setHidden(true);
-            // const user = result.user;
+        confirmationResult.confirm(otp).then(async (result) => {
+            
+            setLoading(true);
+            const res = await fetch(`https://imagebook.onrender.com/getUsers/${number}`);
+            const data = await res.json();
+            // fetch(`https://imagebook.onrender.com/getUsers/${number}`)
+                // .then(res => res.json())
+               
+            if (data.length === 0 || data[0]?.registered === false) {
+                setLoading(false);
+                setHidden(true);
+            }
+            else {
+                try{
+                    const res = await axios.post(`https://imagebook.onrender.com/loginByNumber`,{number:number});
+                    const data1 = res.data;
+                    userCtx.setLogin(data1.user);
+                    localStorage.setItem('loggedInUser',data1.token)
+                    setLoading(false);
+                    navigate("/home");
+                }catch(e){
+                    setLoading(false);
+                    setError('Could not Login, try again');
+                }
+            }
         }).catch((error) => {
-            console.log(error);
+            setLoading(false);
+            setError('Could not verify OTP');
         });
-
+       
     }
 
     const resendOtp = () => {
@@ -150,7 +155,8 @@ const Login = () => {
                     // <OtpPage setValid={setValid} number={number}></OtpPage>
                     <>
                         <div className='h-full  '>
-                            {
+                            {loading && <Loading/>}
+                            {!loading && <>{
                                 !hidden &&
                                 <div className='flex flex-col justify-center h-screen -mt-32'>
                                     <p className='font-semibold text-[25px]  mx-8 mb-2 leading-tight'>OTP Sent</p>
@@ -166,6 +172,7 @@ const Login = () => {
                                                 fontSize: '22px',
                                                 fontWeight: '500'
                                             }} value={otp} onChange={handleChange} numInputs={6} isInputNum />
+
                                             {/* {otp.map((data, index) => {
                                                 return (
                                                     <input 
@@ -181,7 +188,7 @@ const Login = () => {
                                                 );
                                             })} */}
                                         </div>
-
+                                        <div className='mx-6'>{Error && <p className='text-red-600'>{Error}</p>}</div>
                                         <div className='flex items-center justify-center space-x-4 mx-6 mb-4'>
                                             <button onClick={resendOtp} className='w-[176px] h-[52px] bg-[#DFF6FF] rounded-lg font-semibold text-lg text-[#416C87]'>Resend OTP</button>
                                             <button type='submit' className='flex items-center justify-center w-[176px] h-[52px] bg-[#1363DF] text-white text-lg font-semibold space-x-2 rounded-lg'>
@@ -201,7 +208,7 @@ const Login = () => {
                                         }
                                     </div>
                                 </div>
-                            }
+                            }</>}
                             {
                                 hidden &&
                                 <ContinueByName number={number}></ContinueByName>

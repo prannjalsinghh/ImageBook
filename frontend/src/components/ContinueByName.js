@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import rightIcon from "../images/num-pad/arrow-right.png";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import axios from "axios";
 import UserContext from "../store/userContext";
 import { useContext } from "react";
 import img from '../images/continuebyname.png';
+import Loading from "./Loader/Loading";
 
 const ContinueByName = ({ number }) => {
+
   const userCtx = useContext(UserContext);
+  const [loading,setLoading] = React.useState(false);
   const [error,setError] = React.useState('');
   const {
     register,
@@ -23,9 +26,11 @@ const ContinueByName = ({ number }) => {
       number: number,
       name: userName,
     };
+    setLoading(true);
     try{
       await axios.post('https://imagebook.onrender.com/postUsers', user);
     }catch(e){
+      setLoading(false);
       setError("Failed to login")
       console.log(e);
     }
@@ -35,16 +40,19 @@ const ContinueByName = ({ number }) => {
       const data1 = res.data;
       userCtx.setLogin(data1.user);
       localStorage.setItem('loggedInUser',data1.token)
+      setLoading(false);
       navigate("/home");
     }catch(e){
+      setLoading(false);
       setError("Failed to login")
       console.log(e);
     }
 
   };
 
-  return (
-    <div className="flex flex-col justify-center h-screen -mt-10">
+  return (<>
+    {loading && <Loading />}
+    {!loading && <div className="flex flex-col justify-center h-screen -mt-10">
       <img className="w-48 mx-auto mb-6" src={img} alt="" />
       <p className="font-semibold text-[#00386D] text-lg ml-8 mb-2">
         Enter Your Name
@@ -77,8 +85,8 @@ const ContinueByName = ({ number }) => {
           <img src={rightIcon} alt="" />
         </button>
       </form>
-    </div>
-  );
+    </div>}
+    </>);
 };
 
 export default ContinueByName;
