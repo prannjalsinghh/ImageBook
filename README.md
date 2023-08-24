@@ -1,7 +1,7 @@
 # ImageBook
 
-Access the app on:- https://imagebook.netlify.app/
-# **(Initial logging in might take some time, because of the NodeJS server hosted on Vercel)**
+Access the app on:- https://imagebook.netlify.app/ <br/>
+ ** *(Initial logging in might take some time, because of the NodeJS server hosted on Vercel)*  **
 
 It is a social media web app, where you can send your video message to another person, in the form of either Respect, good luck, feedback, or promise etc.
 Since videos is a better way of expressing thoughts, hence you can share your thoughts with your loved ones.
